@@ -349,14 +349,14 @@ export function createServer(): McpServer {
       _meta: { ui: { resourceUri } },
     },
     async (args): Promise<CallToolResult> => {
-      const { difficulty, game_id } = args;
+      const { difficulty = "medium", game_id } = args;
       let game: SudokuGame;
 
       if (game_id && games.has(game_id)) {
         game = games.get(game_id)!;
       } else {
         const solution = generateSolvedBoard();
-        const diff: Difficulty = difficulty;
+        const diff: Difficulty = difficulty as Difficulty;
         const puzzle = createPuzzle(solution, diff);
 
         game = {

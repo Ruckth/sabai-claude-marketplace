@@ -299,7 +299,7 @@ export function createServer() {
         },
         _meta: { ui: { resourceUri } },
     }, async (args) => {
-        const { difficulty, game_id } = args;
+        const { difficulty = "medium", game_id } = args;
         let game;
         if (game_id && games.has(game_id)) {
             game = games.get(game_id);
