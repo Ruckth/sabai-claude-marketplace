@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:www.granola.ai)",
+      "WebFetch(domain:docs.attio.com)"
+    ]
+  }
+}

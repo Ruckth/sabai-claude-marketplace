@@ -8,6 +8,7 @@ Public marketplace for Claude plugins by [Sabai System](https://sabaisystem.com)
 |--------|-------------|------|
 | [sabai-sudoku](plugins/sabai-sudoku) | Interactive Sudoku game with smart hints | MCP App |
 | [sabai-pm](plugins/sabai-pm) | Product Manager assistant with Linear integration | Skills + Commands |
+| [sabai-crm-attio](plugins/sabai-crm-attio) | CRM assistant with Attio integration | Skills + Commands |
 
 ## Installation
 

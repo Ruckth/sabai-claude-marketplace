@@ -20,7 +20,6 @@ Product Manager assistant with Linear integration. Create tickets from templates
 - **Daily Standup** - Generate standup summaries from Linear
 - **Weekly Status** - Comprehensive status reports with metrics
 - **Release Notes** - Professional release notes from completed work
-- **Competitor Analysis** - Structured competitive intelligence
 
 ### Backlog Health
 - **Stale Ticket Detection** - Find tickets that need attention
@@ -77,8 +76,7 @@ Get your API key from: Linear Settings → API → Personal API Keys
 | Command | Description |
 |---------|-------------|
 | `/sprint [action] [name]` | Sprint planning/review/capacity |
-| `/risk [project\|ticket]` | Risk assessment |
-| `/competitor [company]` | Competitor analysis |
+| `/risk [project\|ticket]` | Risk assessment (multiple frameworks) |
 
 ### Backlog Management
 | Command | Description |
@@ -150,8 +148,7 @@ This plugin includes comprehensive skills for:
 | `ticket-templates.md` | Templates for all ticket types |
 | `prioritization.md` | RICE, ICE, MoSCoW frameworks |
 | `release-notes.md` | Release notes generation |
-| `risk-assessment.md` | Risk identification and mitigation |
-| `competitor-analysis.md` | Competitive intelligence templates |
+| `risk-assessment.md` | Risk frameworks (P×I, ROAM, RAID, FMEA) |
 | `decision-log.md` | ADR-style decision documentation |
 
 ## Tips

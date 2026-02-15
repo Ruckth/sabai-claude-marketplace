@@ -1,6 +1,6 @@
 # /risk - Risk Assessment
 
-Perform risk assessment for a project or feature.
+Perform risk assessment for a project or feature using your preferred framework.
 
 ## Usage
 
@@ -8,12 +8,25 @@ Perform risk assessment for a project or feature.
 /risk [project-name|ticket-id]
 ```
 
+## Framework Selection
+
+When you run `/risk`, Claude will ask which framework you want to use:
+
+| Framework | Best For | Complexity |
+|-----------|----------|------------|
+| **Probability × Impact** | Quick assessments, most teams | Simple |
+| **ROAM** | Agile teams, sprint-level risks | Simple |
+| **RAID Log** | Comprehensive tracking | Medium |
+| **FMEA** | Critical systems, detailed analysis | Advanced |
+
 ## What It Does
 
-1. Analyzes project/feature scope
-2. Identifies potential risks across categories
-3. Scores probability and impact
-4. Suggests mitigations
+1. Asks which risk framework to use
+2. Analyzes project/feature scope
+3. Identifies potential risks across categories
+4. Scores using your chosen framework
+5. Suggests mitigations
+6. Provides Linear setup instructions
 
 ## Output Format
 
@@ -103,11 +116,106 @@ Low Prob │    R6      │    R5      │     -
 | 2-3 | Medium | Monitor closely |
 | 1 | Low | Accept and monitor |
 
-## Linear Integration
+## Linear Setup by Framework
 
-- Create risk tracking issues with `risk` label
-- Link risks to relevant project tickets
-- Use comments for risk updates
+### Probability × Impact Setup
+
+**Labels to create:**
+- `risk` - Tag all risk tickets
+- `risk-critical` - Score 7-9
+- `risk-high` - Score 4-6
+- `risk-medium` - Score 2-3
+- `risk-low` - Score 1
+
+**Custom fields (optional):**
+- Probability: Dropdown (High/Medium/Low)
+- Impact: Dropdown (High/Medium/Low)
+- Risk Score: Number
+
+---
+
+### ROAM Setup
+
+**Labels to create:**
+- `risk-resolved` - No longer a risk
+- `risk-owned` - Assigned owner handling it
+- `risk-accepted` - Consciously accepting the risk
+- `risk-mitigated` - Controls in place
+
+**Workflow states:**
+```
+Identified → Owned → Mitigated/Accepted/Resolved
+```
+
+**Custom fields:**
+- Risk Owner: User field
+- Acceptance Reason: Text (for accepted risks)
+
+---
+
+### RAID Log Setup
+
+**Labels to create:**
+- `raid-risk` - Might happen
+- `raid-assumption` - What we believe true
+- `raid-issue` - Already happening (needs action)
+- `raid-dependency` - External blocker
+
+**Custom fields:**
+- RAID Type: Dropdown (Risk/Assumption/Issue/Dependency)
+- Status: Dropdown (Open/Monitoring/Closed)
+- Due Date: Date (for issues and dependencies)
+
+**Views to create:**
+- RAID Board: Filter by `raid-*` labels, group by type
+
+---
+
+### FMEA Setup
+
+**Labels to create:**
+- `risk` - All FMEA items
+- `fmea-critical` - RPN > 200
+- `fmea-high` - RPN 100-200
+- `fmea-medium` - RPN 50-100
+- `fmea-low` - RPN < 50
+
+**Custom fields (required for FMEA):**
+- Severity: Number 1-10
+- Occurrence: Number 1-10
+- Detection: Number 1-10
+- RPN: Number (auto-calculate or manual)
+
+**Description template:**
+```markdown
+## Failure Mode
+What could go wrong?
+
+## Effect
+What happens if it fails?
+
+## Cause
+Why would this happen?
+
+## Current Controls
+What's in place to prevent/detect?
+
+## Recommended Actions
+What should we do?
+```
+
+---
+
+## Quick Setup Commands
+
+Ask Claude to help set up Linear:
+```
+Help me set up Linear for ROAM risk tracking
+```
+
+```
+Create the labels and custom fields for FMEA in Linear
+```
 
 ## Tips
 
@@ -115,3 +223,5 @@ Low Prob │    R6      │    R5      │     -
 - Update probabilities as work progresses
 - Celebrate mitigated risks
 - Learn from realized risks (retros)
+- Choose simpler frameworks (ROAM) for fast-moving teams
+- Use FMEA for high-stakes features (payments, security)

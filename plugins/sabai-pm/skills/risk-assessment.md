@@ -116,3 +116,90 @@ Low Prob │ Low (1)    │ Low (2)    │ Medium (3)
 - **Medium-risk:** Bi-weekly
 - **Low-risk:** Monthly
 - **After major milestones:** Always
+
+## Alternative Frameworks
+
+### ROAM (Agile-Friendly)
+
+Categorize risks by status:
+
+| Status | Meaning | Action |
+|--------|---------|--------|
+| **Resolved** | No longer a risk | Close it |
+| **Owned** | Someone is handling it | Track progress |
+| **Accepted** | We'll live with it | Document why |
+| **Mitigated** | Controls in place | Monitor |
+
+```markdown
+## ROAM Risk Board
+
+### Resolved ✅
+- Risk A - Was resolved by [action]
+
+### Owned 👤
+- Risk B - Owner: [Name] - ETA: [Date]
+
+### Accepted ⚠️
+- Risk C - Accepted because [reason]
+
+### Mitigated 🛡️
+- Risk D - Mitigated by [control]
+```
+
+### RAID Log (Comprehensive)
+
+Track four related items together:
+
+| Type | Definition | Example |
+|------|------------|---------|
+| **Risk** | Might happen | "API might not scale" |
+| **Assumption** | Believed true | "Users have modern browsers" |
+| **Issue** | Already happening | "CI is flaky" |
+| **Dependency** | External blocker | "Waiting on design" |
+
+```markdown
+## RAID Log
+
+| ID | Type | Description | Owner | Status | Due |
+|----|------|-------------|-------|--------|-----|
+| R1 | Risk | API scaling | Dev | Monitoring | - |
+| A1 | Assumption | Browser support | PM | Validated | - |
+| I1 | Issue | CI flaky | DevOps | In Progress | Feb 20 |
+| D1 | Dependency | Design review | PM | Blocked | Feb 18 |
+```
+
+### FMEA (Detailed Analysis)
+
+**Failure Mode and Effects Analysis** - scores on three dimensions:
+
+| Factor | Scale | Description |
+|--------|-------|-------------|
+| **Severity** | 1-10 | How bad if it happens |
+| **Occurrence** | 1-10 | How likely to happen |
+| **Detection** | 1-10 | How hard to catch before impact |
+
+**RPN = Severity × Occurrence × Detection** (max 1000)
+
+```markdown
+## FMEA Register
+
+| Failure Mode | Effect | Cause | S | O | D | RPN | Action |
+|--------------|--------|-------|---|---|---|-----|--------|
+| Auth timeout | User locked out | Network latency | 7 | 4 | 3 | 84 | Add retry logic |
+| Data loss | User loses work | Browser crash | 9 | 2 | 8 | 144 | Auto-save |
+
+### RPN Thresholds
+- > 200: Critical - Immediate action
+- 100-200: High - Plan mitigation
+- 50-100: Medium - Monitor
+- < 50: Low - Accept
+```
+
+## Framework Selection Guide
+
+| Choose | When |
+|--------|------|
+| **Probability × Impact** | Quick assessment, most projects |
+| **ROAM** | Agile teams, sprint-level tracking |
+| **RAID Log** | Need to track assumptions/issues/dependencies too |
+| **FMEA** | Critical systems, compliance requirements |
