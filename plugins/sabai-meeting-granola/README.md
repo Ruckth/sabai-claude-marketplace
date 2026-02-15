@@ -23,6 +23,7 @@ You'll need a [Granola](https://granola.ai) account with MCP enabled.
 | `/sabai-meeting-granola:coach` | Holistic coaching on work patterns |
 | `/sabai-meeting-granola:next` | List upcoming meetings with context |
 | `/sabai-meeting-granola:actions` | Track action items from meetings |
+| `/sabai-meeting-granola:followup` | Generate follow-up emails |
 
 ## Usage Examples
 
@@ -73,6 +74,16 @@ Shows upcoming meetings with context from previous interactions, open items, and
 ```
 
 Extracts and tracks all commitments, tasks, and follow-ups from your meetings. Shows what's overdue, due soon, delegated, and completed.
+
+### Follow-up Emails
+
+```
+/sabai-meeting-granola:followup Discovery call with Acme
+/sabai-meeting-granola:followup last meeting with John
+/sabai-meeting-granola:followup Interview with Sarah
+```
+
+Generates professional follow-up emails based on meeting content. Auto-detects meeting type and adjusts tone (sales, interview, internal, executive). Includes action items, next steps, and suggested attachments.
 
 ### Smart Analysis
 
