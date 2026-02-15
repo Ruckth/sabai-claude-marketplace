@@ -15,6 +15,7 @@ Public marketplace for Claude plugins by [Sabai System](https://sabaisystem.com)
 | [sabai-sabai](plugins/sabai-sabai) | Relax with chill Thai vibes when you need a break | MCP App + Command |
 | [sabai-video-tella](plugins/sabai-video-tella) | Tella video management and content planning | MCP + Commands |
 | [sabai-timesheet-harvest](plugins/sabai-timesheet-harvest) | Efficient Harvest time tracking for employees/contractors | Skills + Commands |
+| [sabai-discord](plugins/sabai-discord) | Discord assistant for server management and messaging | Skills + Commands |
 
 ## Installation
 

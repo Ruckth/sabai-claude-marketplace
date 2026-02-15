@@ -1,0 +1,9 @@
+{
+  "name": "sabai-discord",
+  "description": "Discord assistant for server management, messaging, channel organization, and community engagement.",
+  "version": "1.0.0",
+  "author": "Sabai System",
+  "dependencies": {
+    "mcpServers": ["discord-mcp"]
+  }
+}
