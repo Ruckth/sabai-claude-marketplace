@@ -27,22 +27,22 @@ function SabaiApp() {
   return (
     <main style={{
       margin: 0,
-      padding: "16px",
+      padding: "8px",
       background: "transparent",
       fontFamily: "system-ui, -apple-system, sans-serif",
+      height: "100vh",
+      boxSizing: "border-box",
       display: "flex",
       flexDirection: "column",
-      alignItems: "center",
-      gap: "12px",
+      overflow: "hidden",
     }}>
-      {/* Video with 16:9 aspect ratio */}
+      {/* Video container - takes remaining space */}
       <div style={{
-        width: "100%",
-        maxWidth: "640px",
-        aspectRatio: "16/9",
-        borderRadius: "8px",
-        overflow: "hidden",
-        background: "#000",
+        flex: 1,
+        minHeight: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}>
         <video
           src={sabaiVideo}
@@ -52,19 +52,20 @@ function SabaiApp() {
           muted
           playsInline
           style={{
-            width: "100%",
-            height: "100%",
+            maxWidth: "100%",
+            maxHeight: "100%",
+            borderRadius: "8px",
             objectFit: "contain",
           }}
         />
       </div>
 
-      {/* Attribution - below video, right aligned */}
+      {/* Attribution - bottom right */}
       <div style={{
-        width: "100%",
-        maxWidth: "640px",
         display: "flex",
         justifyContent: "flex-end",
+        paddingTop: "8px",
+        flexShrink: 0,
       }}>
         <div style={{
           display: "flex",
