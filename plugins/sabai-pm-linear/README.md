@@ -1,4 +1,4 @@
-# Sabai PM
+# Sabai PM Linear
 
 Product Manager assistant with Linear integration. Create tickets from templates, manage your backlog, generate PRDs, and much more.
 

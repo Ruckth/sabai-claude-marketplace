@@ -1,0 +1,9 @@
+{
+  "name": "sabai-pm-linear",
+  "description": "Product Manager assistant with Linear integration. Create tickets, manage backlog, generate PRDs, and more.",
+  "version": "1.0.0",
+  "author": "Sabai System",
+  "dependencies": {
+    "mcpServers": ["linear"]
+  }
+}

@@ -5,14 +5,14 @@ Search across your meeting history using natural language.
 ## Usage
 
 ```
-/sabai-granola:search [query]
+/sabai-meeting-granola:search [query]
 ```
 
 ## Examples
 
-- `/sabai-granola:search budget discussions with Acme`
-- `/sabai-granola:search interviews last month`
-- `/sabai-granola:search all meetings with John`
+- `/sabai-meeting-granola:search budget discussions with Acme`
+- `/sabai-meeting-granola:search interviews last month`
+- `/sabai-meeting-granola:search all meetings with John`
 
 ---
 
