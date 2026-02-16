@@ -35,8 +35,8 @@
       "description": "Gmail assistant for email composition, inbox management, templates, and follow-up tracking."
     },
     {
-      "name": "sabai-meeting-granola",
-      "source": "./plugins/sabai-meeting-granola",
+      "name": "sabai-granola",
+      "source": "./plugins/sabai-granola",
       "description": "Meeting intelligence powered by Granola. Search meetings, get summaries, smart analysis by meeting type, and coaching on work patterns."
     },
     {

@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0] - 2026-02-16
+
+### Added
+- Calendar V2 integration for automatic meeting detection
+- `/join` without arguments now joins current/next calendar meeting
+- `recall_list_calendars` tool to list connected calendars
+- `recall_list_calendar_events` tool to list upcoming meetings
+- `recall_get_current_meeting` tool to find current or next meeting
+- `recall_schedule_bot_for_event` tool to schedule bots for calendar events
+
 ## [1.3.0] - 2026-02-16
 
 ### Added

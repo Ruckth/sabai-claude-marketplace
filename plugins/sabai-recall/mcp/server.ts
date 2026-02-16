@@ -25,10 +25,11 @@ const getConfig = () => {
   return {
     apiKey,
     baseUrl: `https://${region}.recall.ai/api/v1`,
+    baseUrlV2: `https://${region}.recall.ai/api/v2`,
   };
 };
 
-// Helper for API requests
+// Helper for API requests (v1)
 async function recallFetch<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -36,6 +37,35 @@ async function recallFetch<T>(
   const config = getConfig();
 
   const response = await fetch(`${config.baseUrl}${endpoint}`, {
+    ...options,
+    headers: {
+      "Authorization": `Token ${config.apiKey}`,
+      "Content-Type": "application/json",
+      ...options.headers,
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Recall API error (${response.status}): ${errorText}`);
+  }
+
+  // Handle 204 No Content
+  if (response.status === 204) {
+    return {} as T;
+  }
+
+  return response.json();
+}
+
+// Helper for API requests (v2 - calendar endpoints)
+async function recallFetchV2<T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const config = getConfig();
+
+  const response = await fetch(`${config.baseUrlV2}${endpoint}`, {
     ...options,
     headers: {
       "Authorization": `Token ${config.apiKey}`,
@@ -116,6 +146,59 @@ interface RecallParticipant {
     code: string;
     created_at: string;
   }>;
+}
+
+// Calendar V2 types
+interface RecallCalendar {
+  id: string;
+  platform: string;
+  platform_email: string;
+  created_at: string;
+  updated_at: string;
+  status: string;
+  status_changes: Array<{
+    code: string;
+    created_at: string;
+  }>;
+}
+
+interface RecallCalendarList {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: RecallCalendar[];
+}
+
+interface RecallCalendarEvent {
+  id: string;
+  calendar_id: string;
+  ical_uid: string;
+  meeting_url: string | null;
+  meeting_platform: string | null;
+  start_time: string;
+  end_time: string;
+  is_deleted: boolean;
+  raw: {
+    summary?: string;
+    description?: string;
+    location?: string;
+    attendees?: Array<{
+      email: string;
+      displayName?: string;
+      responseStatus?: string;
+    }>;
+  };
+  bot?: {
+    id: string;
+    status: string;
+  } | null;
+}
+
+interface RecallCalendarEventList {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: RecallCalendarEvent[];
 }
 
 // ============ MCP SERVER ============
@@ -730,6 +813,233 @@ export function createServer(): McpServer {
             text: JSON.stringify({
               bot_id: args.bot_id,
               message: "Bot is leaving the meeting. Recording will be processed shortly.",
+            }, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  // ============ CALENDAR V2 TOOLS ============
+
+  // Tool: List connected calendars
+  server.tool(
+    "recall_list_calendars",
+    "List all calendars connected to Recall.ai. Returns calendar IDs needed for other calendar operations.",
+    {},
+    async () => {
+      const response = await recallFetchV2<RecallCalendarList>("/calendars/");
+
+      const calendars = response.results.map(cal => ({
+        id: cal.id,
+        platform: cal.platform,
+        email: cal.platform_email,
+        status: cal.status,
+        created_at: cal.created_at,
+      }));
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              total_count: response.count,
+              calendars,
+              message: calendars.length === 0
+                ? "No calendars connected. Connect a calendar in your Recall.ai dashboard."
+                : `Found ${calendars.length} connected calendar(s)`,
+            }, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  // Tool: List calendar events
+  server.tool(
+    "recall_list_calendar_events",
+    "List upcoming calendar events. Use this to find meetings that can be recorded. Returns events with meeting URLs.",
+    {
+      calendar_id: z.string().optional().describe("Filter by specific calendar ID"),
+      start_time_gte: z.string().optional().describe("Filter events starting after this ISO 8601 timestamp (defaults to now)"),
+      start_time_lte: z.string().optional().describe("Filter events starting before this ISO 8601 timestamp"),
+      limit: z.number().min(1).max(100).default(20).describe("Number of events to return"),
+    },
+    async (args) => {
+      let endpoint = `/calendar-events/?limit=${args.limit}`;
+
+      if (args.calendar_id) {
+        endpoint += `&calendar_id=${args.calendar_id}`;
+      }
+
+      // Default to events starting from now
+      const startTime = args.start_time_gte || new Date().toISOString();
+      endpoint += `&start_time__gte=${encodeURIComponent(startTime)}`;
+
+      if (args.start_time_lte) {
+        endpoint += `&start_time__lte=${encodeURIComponent(args.start_time_lte)}`;
+      }
+
+      // Exclude deleted events
+      endpoint += "&is_deleted=false";
+
+      const response = await recallFetchV2<RecallCalendarEventList>(endpoint);
+
+      const events = response.results.map(event => ({
+        id: event.id,
+        title: event.raw.summary || "Untitled",
+        start_time: event.start_time,
+        end_time: event.end_time,
+        meeting_url: event.meeting_url,
+        meeting_platform: event.meeting_platform,
+        has_bot: !!event.bot,
+        bot_id: event.bot?.id,
+        bot_status: event.bot?.status,
+        attendees: event.raw.attendees?.map(a => a.displayName || a.email).slice(0, 5),
+      }));
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              total_count: response.count,
+              returned_count: events.length,
+              events,
+            }, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  // Tool: Get current or next meeting
+  server.tool(
+    "recall_get_current_meeting",
+    "Get the current meeting (happening now) or the next upcoming meeting from connected calendars. Perfect for /join without a URL.",
+    {},
+    async () => {
+      const now = new Date();
+
+      // Look for events in the next 24 hours
+      const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+
+      const response = await recallFetchV2<RecallCalendarEventList>(
+        `/calendar-events/?start_time__gte=${encodeURIComponent(now.toISOString())}&start_time__lte=${encodeURIComponent(tomorrow.toISOString())}&is_deleted=false&limit=10`
+      );
+
+      // Also check for events that started recently (within last 2 hours) and may still be ongoing
+      const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
+      const ongoingResponse = await recallFetchV2<RecallCalendarEventList>(
+        `/calendar-events/?start_time__gte=${encodeURIComponent(twoHoursAgo.toISOString())}&start_time__lte=${encodeURIComponent(now.toISOString())}&is_deleted=false&limit=10`
+      );
+
+      // Combine and filter for events with meeting URLs
+      const allEvents = [...ongoingResponse.results, ...response.results]
+        .filter(event => event.meeting_url)
+        .sort((a, b) => new Date(a.start_time).getTime() - new Date(b.start_time).getTime());
+
+      // Find current meeting (started but not ended)
+      const currentMeeting = allEvents.find(event => {
+        const start = new Date(event.start_time);
+        const end = new Date(event.end_time);
+        return start <= now && end >= now;
+      });
+
+      // Find next meeting
+      const nextMeeting = allEvents.find(event => {
+        const start = new Date(event.start_time);
+        return start > now;
+      });
+
+      const meeting = currentMeeting || nextMeeting;
+
+      if (!meeting) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: JSON.stringify({
+                message: "No current or upcoming meetings found with video links in the next 24 hours.",
+                suggestion: "Make sure you have a calendar connected in Recall.ai and meetings have video conference links.",
+              }, null, 2),
+            },
+          ],
+        };
+      }
+
+      const isCurrent = !!currentMeeting && meeting.id === currentMeeting.id;
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              status: isCurrent ? "current" : "upcoming",
+              event_id: meeting.id,
+              title: meeting.raw.summary || "Untitled",
+              start_time: meeting.start_time,
+              end_time: meeting.end_time,
+              meeting_url: meeting.meeting_url,
+              meeting_platform: meeting.meeting_platform,
+              has_bot: !!meeting.bot,
+              bot_id: meeting.bot?.id,
+              message: isCurrent
+                ? `Current meeting: "${meeting.raw.summary || "Untitled"}"`
+                : `Next meeting: "${meeting.raw.summary || "Untitled"}" starting at ${new Date(meeting.start_time).toLocaleTimeString()}`,
+            }, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  // Tool: Schedule bot for calendar event
+  server.tool(
+    "recall_schedule_bot_for_event",
+    "Schedule a Recall bot to join a specific calendar event. The bot will automatically join when the meeting starts.",
+    {
+      event_id: z.string().describe("The calendar event ID to schedule a bot for"),
+      bot_name: z.string().default("Recall Bot").describe("Display name for the bot"),
+      deduplication_key: z.string().optional().describe("Optional key to prevent duplicate bots for the same meeting"),
+    },
+    async (args) => {
+      const botConfig: Record<string, unknown> = {
+        bot_name: args.bot_name,
+        recording_config: {
+          transcript: {
+            provider: {
+              meeting_captions: {},
+            },
+          },
+        },
+      };
+
+      const requestBody: Record<string, unknown> = {
+        deduplication_key: args.deduplication_key || `event-${args.event_id}`,
+        bot_config: botConfig,
+      };
+
+      const event = await recallFetchV2<RecallCalendarEvent>(
+        `/calendar-events/${args.event_id}/bot/`,
+        {
+          method: "POST",
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({
+              event_id: event.id,
+              title: event.raw.summary || "Untitled",
+              meeting_url: event.meeting_url,
+              start_time: event.start_time,
+              bot_id: event.bot?.id,
+              bot_status: event.bot?.status,
+              message: `Bot scheduled to join "${event.raw.summary || "Untitled"}" at ${new Date(event.start_time).toLocaleString()}`,
             }, null, 2),
           },
         ],

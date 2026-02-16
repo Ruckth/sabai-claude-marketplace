@@ -19,7 +19,7 @@ Public marketplace for Claude plugins by [Sabai System](https://sabaisystem.com)
 | [sabai-timesheet-harvest](plugins/sabai-timesheet-harvest) | Efficient Harvest time tracking for employees/contractors | Skills + Commands | 1.0.0 | Active | 2026-02-16 |
 | [sabai-discord](plugins/sabai-discord) | Discord assistant for server management and messaging | Skills + Commands | 1.0.0 | Active | 2026-02-16 |
 | [sabai-slack](plugins/sabai-slack) | Full-featured Slack integration for messaging and search | MCP + Skills + Commands | 1.0.0 | Active | 2026-02-16 |
-| [sabai-recall](plugins/sabai-recall) | Meeting bot automation with Recall.ai for recording and transcription | MCP App + Commands | 1.3.0 | Active | 2026-02-16 |
+| [sabai-recall](plugins/sabai-recall) | Meeting bot automation with Recall.ai for recording and transcription | MCP App + Commands | 1.4.0 | Active | 2026-02-16 |
 
 **Status:** Active = Stable and maintained | Beta = In development | Deprecated = No longer maintained
 
@@ -27,14 +27,28 @@ Public marketplace for Claude plugins by [Sabai System](https://sabaisystem.com)
 
 ### Claude for Work (Recommended)
 
-The easiest way to install plugins is through Claude for Work:
+The easiest way to install plugins is through [Claude for Work](https://claude.ai/work). This allows your entire team to access and manage plugins.
 
-1. Open Claude for Work
-2. Go to **Plugins** > **Browse plugins** > **Manage**
-3. Click **Add marketplace from GitHub**
-4. Enter: `sabaisystem/sabai-claude-marketplace`
-5. Click **Sync**
-6. Install any plugin from the marketplace
+#### Adding the Marketplace
+
+1. Open [Claude for Work](https://claude.ai/work) and sign in as an Admin
+2. Navigate to **Settings** → **Plugins**
+3. Under "Plugin Marketplaces", click **Add marketplace**
+4. Select **GitHub** as the source
+5. Enter the repository: `sabaisystem/sabai-claude-marketplace`
+6. Click **Add marketplace**
+
+#### Installing Plugins
+
+Once the marketplace is added:
+
+1. Go to **Settings** → **Plugins**
+2. Browse available plugins from the Sabai System marketplace
+3. Click **Install** on any plugin you want to enable
+4. Configure plugin settings if required (API keys, preferences, etc.)
+5. The plugin is now available to all users in your workspace
+
+> **Note:** Some plugins require MCP servers or external API connections. Check each plugin's README for specific setup requirements.
 
 ### Claude Code CLI
 

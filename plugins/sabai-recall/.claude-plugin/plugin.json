@@ -1,7 +1,7 @@
 {
   "name": "sabai-recall",
   "description": "Meeting bot automation with Recall.ai. Create bots to join and record meetings, access recordings, transcripts, and participant data.",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "author": {
     "name": "Sabai Team"
   },

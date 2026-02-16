@@ -1,6 +1,6 @@
 {
   "name": "sabai-recall",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "type": "module",
   "description": "MCP server for Recall.ai meeting bot automation with embedded video playback",
   "license": "MIT",

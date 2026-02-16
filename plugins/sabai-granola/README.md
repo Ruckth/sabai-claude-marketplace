@@ -1,4 +1,4 @@
-# Sabai Meeting Granola
+# Sabai Granola
 
 Meeting intelligence plugin powered by [Granola](https://granola.ai). Search meetings, get summaries, run smart analysis by meeting type, and receive holistic coaching on your work patterns and communication.
 
@@ -16,50 +16,50 @@ You'll need a [Granola](https://granola.ai) account with MCP enabled.
 
 | Command | Description |
 |---------|-------------|
-| `/sabai-meeting-granola:connect` | Connect and authenticate with Granola |
-| `/sabai-meeting-granola:search` | Search across your meeting history |
-| `/sabai-meeting-granola:summary` | Summarize one or multiple meetings |
-| `/sabai-meeting-granola:ask` | Ask questions about your meetings |
-| `/sabai-meeting-granola:analyze` | Smart analysis based on meeting type |
-| `/sabai-meeting-granola:coach` | Holistic coaching on work patterns |
-| `/sabai-meeting-granola:next` | List upcoming meetings with context |
-| `/sabai-meeting-granola:actions` | Track action items from meetings |
-| `/sabai-meeting-granola:followup` | Generate follow-up emails |
+| `/sabai-granola:connect` | Connect and authenticate with Granola |
+| `/sabai-granola:search` | Search across your meeting history |
+| `/sabai-granola:summary` | Summarize one or multiple meetings |
+| `/sabai-granola:ask` | Ask questions about your meetings |
+| `/sabai-granola:analyze` | Smart analysis based on meeting type |
+| `/sabai-granola:coach` | Holistic coaching on work patterns |
+| `/sabai-granola:next` | List upcoming meetings with context |
+| `/sabai-granola:actions` | Track action items from meetings |
+| `/sabai-granola:followup` | Generate follow-up emails |
 
 ## Usage Examples
 
 ### Search Meetings
 
 ```
-/sabai-meeting-granola:search budget discussions with Acme
-/sabai-meeting-granola:search interviews last month
-/sabai-meeting-granola:search all meetings with John
+/sabai-granola:search budget discussions with Acme
+/sabai-granola:search interviews last month
+/sabai-granola:search all meetings with John
 ```
 
 ### Summarize Meetings
 
 ```
-/sabai-meeting-granola:summary Discovery call with Acme
-/sabai-meeting-granola:summary all meetings yesterday
-/sabai-meeting-granola:summary this week's customer calls
+/sabai-granola:summary Discovery call with Acme
+/sabai-granola:summary all meetings yesterday
+/sabai-granola:summary this week's customer calls
 ```
 
 ### Ask Questions
 
 ```
-/sabai-meeting-granola:ask What did John say about the budget?
-/sabai-meeting-granola:ask When did we last discuss the API redesign?
-/sabai-meeting-granola:ask What objections has Acme raised?
-/sabai-meeting-granola:ask What did I commit to this week?
+/sabai-granola:ask What did John say about the budget?
+/sabai-granola:ask When did we last discuss the API redesign?
+/sabai-granola:ask What objections has Acme raised?
+/sabai-granola:ask What did I commit to this week?
 ```
 
 ### Upcoming Meetings
 
 ```
-/sabai-meeting-granola:next
-/sabai-meeting-granola:next today
-/sabai-meeting-granola:next tomorrow
-/sabai-meeting-granola:next this week
+/sabai-granola:next
+/sabai-granola:next today
+/sabai-granola:next tomorrow
+/sabai-granola:next this week
 ```
 
 Shows upcoming meetings with context from previous interactions, open items, and prep suggestions.
@@ -67,11 +67,11 @@ Shows upcoming meetings with context from previous interactions, open items, and
 ### Action Items
 
 ```
-/sabai-meeting-granola:actions
-/sabai-meeting-granola:actions this week
-/sabai-meeting-granola:actions my items
-/sabai-meeting-granola:actions overdue
-/sabai-meeting-granola:actions for John
+/sabai-granola:actions
+/sabai-granola:actions this week
+/sabai-granola:actions my items
+/sabai-granola:actions overdue
+/sabai-granola:actions for John
 ```
 
 Extracts and tracks all commitments, tasks, and follow-ups from your meetings. Shows what's overdue, due soon, delegated, and completed.
@@ -79,9 +79,9 @@ Extracts and tracks all commitments, tasks, and follow-ups from your meetings. S
 ### Follow-up Emails
 
 ```
-/sabai-meeting-granola:followup Discovery call with Acme
-/sabai-meeting-granola:followup last meeting with John
-/sabai-meeting-granola:followup Interview with Sarah
+/sabai-granola:followup Discovery call with Acme
+/sabai-granola:followup last meeting with John
+/sabai-granola:followup Interview with Sarah
 ```
 
 Generates professional follow-up emails based on meeting content. Auto-detects meeting type and adjusts tone (sales, interview, internal, executive). Includes action items, next steps, and suggested attachments.
@@ -91,10 +91,10 @@ Generates professional follow-up emails based on meeting content. Auto-detects m
 The `/analyze` command auto-detects meeting type and runs the appropriate analysis:
 
 ```
-/sabai-meeting-granola:analyze Discovery call with Acme Corp
-/sabai-meeting-granola:analyze Interview with Sarah for PM role
-/sabai-meeting-granola:analyze Today's standup
-/sabai-meeting-granola:analyze Steering committee Q1
+/sabai-granola:analyze Discovery call with Acme Corp
+/sabai-granola:analyze Interview with Sarah for PM role
+/sabai-granola:analyze Today's standup
+/sabai-granola:analyze Steering committee Q1
 ```
 
 #### Supported Meeting Types
@@ -113,11 +113,11 @@ The `/analyze` command auto-detects meeting type and runs the appropriate analys
 The `/coach` command provides holistic analysis of your work patterns:
 
 ```
-/sabai-meeting-granola:coach this week
-/sabai-meeting-granola:coach last month
-/sabai-meeting-granola:coach my sales calls
-/sabai-meeting-granola:coach communication
-/sabai-meeting-granola:coach time management
+/sabai-granola:coach this week
+/sabai-granola:coach last month
+/sabai-granola:coach my sales calls
+/sabai-granola:coach communication
+/sabai-granola:coach time management
 ```
 
 #### Coaching Dimensions

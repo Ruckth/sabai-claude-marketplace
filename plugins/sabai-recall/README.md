@@ -5,6 +5,7 @@ Meeting bot automation with [Recall.ai](https://recall.ai). Create bots to join 
 ## Features
 
 - **Create Meeting Bots**: Send a bot to any meeting URL to record
+- **Calendar Integration**: Auto-join current or next meeting from connected calendars
 - **Schedule Bots**: Schedule bots to join meetings in advance
 - **Embedded Video Player**: Watch recordings directly in Claude
 - **Get Recordings**: Access video, audio, and mixed recordings
@@ -56,7 +57,8 @@ Add to Claude Desktop config:
 
 | Command | Description |
 |---------|-------------|
-| `/join <meeting_url>` | Send a bot to join and record a meeting |
+| `/join` | Join the current or next calendar meeting |
+| `/join <meeting_url>` | Send a bot to join and record a specific meeting |
 | `/recording <bot_id or meeting_url>` | Watch the recording in an embedded video player |
 | `/transcript <bot_id>` | Get the transcript from a recorded meeting |
 
@@ -64,6 +66,12 @@ Add to Claude Desktop config:
 
 ### Quick Join (Command)
 
+Join the current or next meeting from your calendar:
+```
+/join
+```
+
+Or specify a meeting URL:
 ```
 /join https://zoom.us/j/123456789
 ```
@@ -133,6 +141,10 @@ Show me all my recent recording bots
 | `recall_get_transcript` | Get the meeting transcript |
 | `recall_get_participants` | Get participant list |
 | `recall_leave_meeting` | Make the bot leave immediately |
+| `recall_list_calendars` | List connected calendars |
+| `recall_list_calendar_events` | List upcoming calendar events |
+| `recall_get_current_meeting` | Get current or next meeting |
+| `recall_schedule_bot_for_event` | Schedule bot for a calendar event |
 
 ## Supported Platforms
 
