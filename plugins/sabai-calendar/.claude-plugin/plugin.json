@@ -2,8 +2,14 @@
   "name": "sabai-calendar",
   "description": "Calendar assistant with Google Calendar integration. Manage events, schedule meetings, get daily briefings, and optimize your time.",
   "version": "1.0.0",
-  "author": "Sabai System",
-  "dependencies": {
-    "mcpServers": ["google-calendar"]
+  "author": {
+    "name": "Sabai Team"
+  },
+  "keywords": ["calendar", "google", "meetings", "events", "scheduling"],
+  "mcpServers": {
+    "google-calendar": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/google-calendar-mcp@latest"]
+    }
   }
 }

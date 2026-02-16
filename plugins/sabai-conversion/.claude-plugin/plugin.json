@@ -2,8 +2,11 @@
   "name": "sabai-conversion",
   "description": "Smart currency and timezone converter that learns your preferences",
   "version": "1.0.0",
-  "author": "Sabai System",
-  "skills": ["skills/conversion.md"],
+  "author": {
+    "name": "Sabai Team"
+  },
+  "keywords": ["currency", "timezone", "conversion", "calculator"],
+  "skills": "./skills/",
   "preferences": {
     "base_currency": {
       "type": "string",

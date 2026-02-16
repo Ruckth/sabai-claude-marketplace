@@ -37,15 +37,25 @@ plugins/
   "name": "plugin-name",
   "description": "What your plugin does",
   "version": "1.0.0",
-  "author": "Sabai System",
-  "mcp": {
-    "command": "bash",
-    "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/startup.sh"]
+  "author": {
+    "name": "Sabai Team"
   },
-  "commands": ["commands/command-name.md"],
-  "skills": ["skills/skill-name.md"]
+  "keywords": ["relevant", "keywords"],
+  "skills": "./skills/",
+  "commands": "./commands/",
+  "mcpServers": {
+    "plugin-name": {
+      "command": "bash",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/startup.sh"]
+    }
+  }
 }
 ```
+
+**Important format rules:**
+- `author` must be an object with `name` property
+- `skills` and `commands` are directory paths (strings), not arrays
+- `mcpServers` is at root level with server name as key (not `mcp` or `dependencies.mcpServers`)
 
 ## Marketplace Registration (Required)
 

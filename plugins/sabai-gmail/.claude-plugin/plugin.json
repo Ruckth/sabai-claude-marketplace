@@ -2,8 +2,18 @@
   "name": "sabai-gmail",
   "description": "Gmail assistant for email composition, inbox management, templates, and follow-up tracking.",
   "version": "1.0.0",
-  "author": "Sabai System",
-  "dependencies": {
-    "mcpServers": ["gmail", "google-calendar"]
+  "author": {
+    "name": "Sabai Team"
+  },
+  "keywords": ["gmail", "email", "inbox", "google", "communication"],
+  "mcpServers": {
+    "gmail": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/gmail-mcp@latest"]
+    },
+    "google-calendar": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/google-calendar-mcp@latest"]
+    }
   }
 }

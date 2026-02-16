@@ -2,12 +2,15 @@
   "name": "sabai-meeting-granola",
   "description": "Meeting intelligence plugin powered by Granola. Search meetings, get summaries, smart analysis by meeting type, and holistic coaching on work patterns and communication.",
   "version": "1.0.0",
-  "author": "Sabai System",
-  "homepage": "https://sabaisystem.com",
-  "repository": "https://github.com/sabai-system/sabai-claude-marketplace",
-  "commands": "commands",
-  "mcp": {
-    "requires": ["granola"]
+  "author": {
+    "name": "Sabai Team"
   },
-  "tags": ["meetings", "productivity", "coaching", "sales", "communication"]
+  "keywords": ["meetings", "productivity", "coaching", "sales", "communication", "granola"],
+  "commands": "./commands/",
+  "mcpServers": {
+    "granola": {
+      "command": "npx",
+      "args": ["-y", "granola-mcp@latest"]
+    }
+  }
 }
