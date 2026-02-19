@@ -1,20 +1,45 @@
 # /followup Command
 
-Create a follow-up email for an outstanding conversation.
+Find emails needing follow-up and create responses.
 
 ## Usage
 
 ```
-/followup [email reference or context]
+/followup                           # Detect emails needing follow-up
+/followup --detect                  # Same as above
+/followup --detect --days 3         # Last 3 days only
+/followup [email reference]         # Follow up on specific email
 ```
 
 ## Parameters
 
-- `email reference` - Description of original email or conversation (optional)
+- `--detect` - Run follow-up detection algorithm (default if no reference)
+- `--days N` - Number of days to scan (default: 7)
+- `email reference` - Description of original email or conversation
 
 ## Behavior
 
-When this command is invoked:
+### Mode 1: Detection (default)
+
+When invoked without a reference or with `--detect`:
+
+1. **Run detection algorithm** using the follow-up-detection skill:
+   - Search Gmail for emails in the last N days
+   - Filter out newsletters, automated emails, already-replied threads
+   - Score each email by urgency
+
+2. **Present results** sorted by urgency:
+   - Urgent (score 7+)
+   - Should reply soon (score 4-6)
+   - Can wait (score 1-3)
+
+3. **Ask user** which email to follow up on
+
+4. **Proceed to draft** the follow-up email
+
+### Mode 2: Direct Follow-up
+
+When invoked with a specific email reference:
 
 1. If reference provided, use it as context
 2. If no reference, ask:

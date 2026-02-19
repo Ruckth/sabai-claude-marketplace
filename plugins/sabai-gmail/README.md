@@ -5,7 +5,7 @@
 | Field | Value |
 |-------|-------|
 | Type | Skills + Commands |
-| Version | 1.0.0 |
+| Version | 1.1.0 |
 | Status | Active |
 | Command | `/email`, `/reply`, `/inbox`, `/template` |
 | Repo | `plugins/sabai-gmail` |
@@ -18,6 +18,7 @@ A Gmail assistant plugin for email composition, inbox management, templates, and
 
 ## Key Features
 
+- **Follow-up detection** - Automatically find emails needing a response with urgency scoring
 - Smart email drafts with appropriate tone
 - Contextual reply assistance based on email threads
 - 8 built-in email templates (intro, follow-up, thank-you, meeting-request, update, decline, referral, feedback)
@@ -28,6 +29,8 @@ A Gmail assistant plugin for email composition, inbox management, templates, and
 
 ## Use Cases
 
+- "Find emails I need to respond to"
+- "What emails need follow-up from the last 3 days?"
 - "Draft an email to john@example.com about the project update"
 - "Reply to this email with a professional tone accepting their proposal"
 - "Summarize the marketing campaign email thread"
