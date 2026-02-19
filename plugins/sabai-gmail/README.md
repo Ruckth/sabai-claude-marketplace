@@ -4,20 +4,21 @@
 
 | Field | Value |
 |-------|-------|
-| Type | Skills + Commands |
-| Version | 1.0.0 |
+| Type | MCP App + Skills + Commands |
+| Version | 1.3.0 |
 | Status | Active |
-| Command | `/email`, `/reply`, `/inbox`, `/template` |
+| Command | `/email`, `/reply`, `/inbox`, `/template`, `/followup` |
 | Repo | `plugins/sabai-gmail` |
 
 ---
 
 ## Overview
 
-A Gmail assistant plugin for email composition, inbox management, templates, and follow-up tracking. Features smart drafts with tone adjustment, contextual reply assistance, built-in email templates, email triage and prioritization, thread summarization, and multi-language support.
+A Gmail assistant plugin for email composition, inbox management, templates, and follow-up tracking. Features an embedded email editor UI, smart drafts with tone adjustment, contextual reply assistance, built-in email templates, email triage and prioritization, thread summarization, and multi-language support.
 
 ## Key Features
 
+- **MCP App Email Editor** - Embedded UI for composing and editing emails directly in Claude
 - Smart email drafts with appropriate tone
 - Contextual reply assistance based on email threads
 - 8 built-in email templates (intro, follow-up, thank-you, meeting-request, update, decline, referral, feedback)
@@ -33,11 +34,29 @@ A Gmail assistant plugin for email composition, inbox management, templates, and
 - "Summarize the marketing campaign email thread"
 - "Use the meeting-request template"
 
+## MCP App Email Editor
+
+The email editor provides an embedded UI in Claude for composing emails:
+
+- **To/CC/BCC fields** - Email chips for easy recipient management
+- **Subject field** - Editable subject line
+- **Body editor** - Full text editor for email content
+- **Signature** - Displays configured signature
+- **Actions** - Send, Save Draft, or Discard
+
+### MCP Tools
+
+- `compose_email` - Open the email editor with optional pre-filled content
+- `update_draft` - Save changes to a draft (UI-only)
+- `send_email` - Send the composed email (UI-only)
+- `save_draft` - Save and close the editor (UI-only)
+- `discard_draft` - Discard the draft (UI-only)
+
 ## Commands
 
 - `/email [recipient] [subject]` - Compose a new email
 - `/reply [context]` - Draft a reply to an email
-- `/followup [email-ref]` - Create a follow-up email
+- `/followup [email-ref]` - Detect and manage follow-up emails
 - `/inbox [filter]` - View and triage inbox
 - `/search [query]` - Search emails with advanced filters
 - `/template [name]` - Use an email template
@@ -53,6 +72,15 @@ A Gmail assistant plugin for email composition, inbox management, templates, and
     "gmail": {
       "command": "npx",
       "args": ["-y", "@anthropic/gmail-mcp@latest"]
+    },
+    "google-calendar": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/google-calendar-mcp@latest"]
+    },
+    "sabai-gmail-editor": {
+      "command": "npx",
+      "args": ["tsx", "mcp/main.ts"],
+      "cwd": "."
     }
   }
 }
@@ -70,6 +98,7 @@ Required Claude Code permissions:
 ## Dependencies
 
 - **Required**: Gmail MCP server (`@anthropic/gmail-mcp`)
+- **Required for MCP App**: `tsx` (for running TypeScript server)
 - **Optional**: Google Calendar MCP (for meeting scheduling)
 
 ## Limitations
