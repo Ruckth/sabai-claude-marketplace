@@ -1,23 +1,58 @@
 # Sabai Attio
 
-CRM assistant with Attio integration. Manage leads, prepare for meetings, track deals, and log activities in your Attio workspace using natural language.
+**CRM assistant with Attio integration for lead management, meeting prep, and deal tracking.**
 
-## Features
+| Field | Value |
+|-------|-------|
+| Type | MCP + Skills + Commands |
+| Version | 1.0.0 |
+| Status | Active |
+| Command | `/lead`, `/meeting-prep`, `/pipeline`, `/deal`, `/log` |
+| Repo | `plugins/sabai-attio` |
 
-- **Lead Management** - Search, qualify, and enrich leads with BANT/CHAMP frameworks
-- **Meeting Prep** - Generate comprehensive briefings before customer calls
-- **Pipeline Health** - Analyze deal pipeline and identify at-risk opportunities
-- **Deal Management** - Track and advance deals through your sales process
-- **Activity Logging** - Log calls, emails, and notes to contact records
+---
 
-## Prerequisites
+## Overview
 
-- Attio MCP server configured and connected
-- Attio workspace with appropriate permissions
+A CRM assistant plugin with Attio integration. Manage leads, prepare for meetings, track deals, and log activities in your Attio workspace using natural language. Supports lead qualification with BANT/CHAMP frameworks, comprehensive meeting briefings, pipeline health analysis, deal progression tracking, and activity logging to contact records.
 
-### Setting up Attio MCP
+## Key Features
 
-Add to your Claude configuration:
+- Lead search, qualification, and enrichment with BANT/CHAMP frameworks
+- Comprehensive meeting briefings before customer calls
+- Pipeline health analysis with at-risk opportunity identification
+- Deal tracking and stage progression
+- Activity logging (calls, emails, notes) to contact records
+
+## Use Cases
+
+- "Find and qualify john@acme.com"
+- "Prepare me for my meeting with Acme Corp"
+- "Show me my pipeline health"
+- "Advance the Acme Enterprise deal"
+- "Log a call with Sarah at TechCorp"
+
+## Commands
+
+- `/lead [name or email]` - Search and qualify a lead
+- `/meeting-prep [company or contact]` - Generate meeting briefing
+- `/pipeline [options]` - Analyze pipeline health
+- `/deal [action] [deal]` - Manage a specific deal
+- `/log [type] [contact]` - Log activity to a contact
+
+## MCP Tools
+
+- `search-records` - Find people, companies, deals
+- `get-records-by-ids` - Get detailed record information
+- `create-note` - Log activities and notes
+- `create-task` - Create follow-up tasks
+- `search-notes-by-metadata` - Find recent interactions
+- `search-emails-by-metadata` - Review email history
+- `search-meetings` - Find scheduled meetings
+
+## Configuration
+
+### MCP Server Setup (Official)
 
 ```json
 {
@@ -30,9 +65,9 @@ Add to your Claude configuration:
 }
 ```
 
-When you first connect, you'll be prompted to authenticate with OAuth. The Attio MCP uses your existing Attio permissions.
+### MCP Server Setup (Community)
 
-Alternatively, you can use the community [kesslerio/attio-mcp-server](https://github.com/kesslerio/attio-mcp-server) for additional features:
+Alternatively, use the [kesslerio/attio-mcp-server](https://github.com/kesslerio/attio-mcp-server):
 
 ```json
 {
@@ -41,78 +76,25 @@ Alternatively, you can use the community [kesslerio/attio-mcp-server](https://gi
       "command": "npx",
       "args": ["-y", "@kesslerio/attio-mcp-server"],
       "env": {
-        "ATTIO_API_KEY": "your-attio-api-key"
+        "ATTIO_API_KEY": "${ATTIO_API_KEY}"
       }
     }
   }
 }
 ```
 
-## Commands
+## Authentication
 
-| Command | Description |
-|---------|-------------|
-| `/lead [name or email]` | Search and qualify a lead |
-| `/meeting-prep [company or contact]` | Generate meeting briefing |
-| `/pipeline [options]` | Analyze pipeline health |
-| `/deal [action] [deal]` | Manage a specific deal |
-| `/log [type] [contact]` | Log activity to a contact |
+OAuth via Attio. When you first connect with the official MCP server, you'll be prompted to authorize access. The community server requires an API key.
 
-## Usage Examples
+## Dependencies
 
-### Find and Qualify a Lead
-```
-/lead john@acme.com
-```
-Returns lead details, company info, recent activities, and qualification assessment.
+- **Required**: Attio account with workspace access
 
-### Prepare for a Meeting
-```
-/meeting-prep Acme Corp
-```
-Generates a briefing with company overview, key contacts, recent interactions, open deals, and suggested talking points.
+## Limitations
 
-### Check Pipeline Health
-```
-/pipeline
-```
-Shows pipeline summary, deals by stage, at-risk opportunities, and recommendations.
-
-### Advance a Deal
-```
-/deal advance Acme Enterprise
-```
-Updates deal stage and logs the progression.
-
-### Log a Call
-```
-/log call Sarah at TechCorp - discussed pricing, they need proposal by Friday
-```
-Creates a note attached to the contact with call details.
-
-## Skills
-
-This plugin includes skills for:
-
-- **Lead Management** (`skills/lead-management.md`) - Search, qualify, and enrich leads
-- **Meeting Prep** (`skills/meeting-prep.md`) - Generate comprehensive meeting briefings
-- **Pipeline Health** (`skills/pipeline-health.md`) - Analyze and optimize your pipeline
-- **Deal Management** (`skills/deal-management.md`) - Track and advance deals
-- **Activity Logging** (`skills/activity-logging.md`) - Log interactions and notes
-
-## Attio MCP Tools Used
-
-This plugin leverages these Attio MCP capabilities:
-
-| Tool | Purpose |
-|------|---------|
-| `search-records` | Find people, companies, deals |
-| `get-records-by-ids` | Get detailed record information |
-| `create-note` | Log activities and notes |
-| `create-task` | Create follow-up tasks |
-| `search-notes-by-metadata` | Find recent interactions |
-| `search-emails-by-metadata` | Review email history |
-| `search-meetings` | Find scheduled meetings |
+- Requires Attio subscription
+- Access depends on your Attio workspace permissions
 
 ## Tips
 
@@ -124,6 +106,7 @@ This plugin leverages these Attio MCP capabilities:
 
 ## Links
 
+- [README](https://github.com/sabaisystem/sabai-claude-marketplace/tree/main/plugins/sabai-attio)
+- [CHANGELOG](https://github.com/sabaisystem/sabai-claude-marketplace/tree/main/plugins/sabai-attio/CHANGELOG.md)
 - [Attio](https://attio.com)
 - [Attio MCP Documentation](https://docs.attio.com/mcp/overview)
-- [Sabai System](https://sabaisystem.com)

@@ -1,18 +1,41 @@
 # Sabai Tella
 
-A Claude plugin for managing Tella videos and playlists, planning video content, and creating scripts for async video communication.
+**Video management and content planning with Tella for async video communication.**
 
-## Features
+| Field | Value |
+|-------|-------|
+| Type | MCP + Commands |
+| Version | 1.0.0 |
+| Status | Active |
+| Command | `/tella` |
+| Repo | `plugins/sabai-tella` |
 
-- **Video Management**: List, update, duplicate, and organize your Tella videos
-- **Playlist Operations**: Create and manage playlists with custom settings
-- **Video Planning**: Structure your video content with clear talking points
-- **Script Generation**: Create scripts and outlines for your recordings
-- **Clip Creation**: Extract clips from existing videos with trimming
+---
+
+## Overview
+
+A plugin for managing Tella videos and playlists, planning video content, and creating scripts for async video communication. Supports listing, updating, duplicating, and organizing videos, playlist management with custom settings, structured content planning with talking points, script generation, and clip extraction with trimming.
+
+## Key Features
+
+- List, update, duplicate, and organize Tella videos
+- Create and manage playlists with custom settings
+- Structure video content with clear talking points
+- Generate scripts and outlines for recordings
+- Extract clips from existing videos with trimming
+
+## Use Cases
+
+- "List my recent Tella videos"
+- "Create a 30-second clip from my webinar starting at 5 minutes"
+- "Create a new playlist called 'Product Tutorials'"
+- "Help me prepare a weekly team update video"
+
+## Commands
+
+- `/tella` - Plan and prepare Tella video content
 
 ## MCP Tools
-
-This plugin integrates with Tella's official MCP server, providing these tools:
 
 ### Video Management
 - `list_videos` - Retrieve workspace videos with pagination and playlist filtering
@@ -29,28 +52,15 @@ This plugin integrates with Tella's official MCP server, providing these tools:
 - `delete_playlist` - Remove playlists
 - `add_video_to_playlist` / `remove_video_from_playlist` - Manage playlist contents
 
-## Commands
+## Configuration
 
-### `/tella`
-
-Plan and prepare Tella video content. This command helps you:
-
-- Define the purpose and audience for your video
-- Create a structured outline or script
-- Prepare talking points and key messages
-- Suggest visual aids or screen recordings to include
-
-## Installation
-
-### Claude Code
+### MCP Server Setup (Claude Code)
 
 ```bash
 claude mcp add --transport http --scope user tella https://api.tella.com/mcp
 ```
 
-### Claude Desktop
-
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
+### MCP Server Setup (Claude Desktop)
 
 ```json
 {
@@ -63,67 +73,27 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 }
 ```
 
-### Authentication
+## Authentication
 
-The Tella MCP server uses OAuth 2.1 authentication. On first use, you'll be prompted to authenticate with your Tella account.
+OAuth 2.1 via Tella. On first use, you'll be prompted to authenticate with your Tella account.
 
 **Troubleshooting**: If you have authentication issues, clear the MCP auth cache:
 ```bash
 rm -rf ~/.mcp-auth
 ```
 
-## Usage Examples
+## Dependencies
 
-### Managing Videos
+- **Required**: Tella account
 
-```
-List my recent Tella videos
-```
+## Limitations
 
-```
-Get the transcript for my latest video
-```
+- Requires Tella subscription
+- Video editing features depend on Tella plan
 
-```
-Make my onboarding video public and enable downloads
-```
+## Links
 
-### Creating Clips
-
-```
-Create a 30-second clip from my webinar starting at 5 minutes
-```
-
-```
-Duplicate my demo video and trim to just the first chapter
-```
-
-### Playlist Management
-
-```
-Create a new playlist called "Product Tutorials" with a 📚 emoji
-```
-
-```
-Add my latest video to the onboarding playlist
-```
-
-### Content Planning
-
-```
-/tella Create a product demo video for our new feature
-```
-
-```
-/tella Help me prepare a weekly team update video
-```
-
-## About Tella
-
-[Tella](https://tella.tv) is a video recording and sharing platform for creating professional async video content, screen recordings, and video messages.
-
+- [README](https://github.com/sabaisystem/sabai-claude-marketplace/tree/main/plugins/sabai-tella)
+- [CHANGELOG](https://github.com/sabaisystem/sabai-claude-marketplace/tree/main/plugins/sabai-tella/CHANGELOG.md)
+- [Tella](https://tella.tv)
 - [Tella MCP Documentation](https://docs.tella.com/mcp-server)
-
----
-
-Built by [Sabai System](https://sabaisystem.com)

@@ -1,8 +1,22 @@
 # Sabai Harvest
 
-Efficient Harvest time tracking for employees and contractors using the [hrvst-cli](https://github.com/kgajera/hrvst-cli).
+**Efficient time tracking with Harvest CLI for employees and contractors.**
 
-## Features
+| Field | Value |
+|-------|-------|
+| Type | Skills + Commands |
+| Version | 1.0.0 |
+| Status | Active |
+| Command | `/setup-harvest`, `/duplicate-week`, `/log`, `/timesheet` |
+| Repo | `plugins/sabai-harvest` |
+
+---
+
+## Overview
+
+An efficient Harvest time tracking plugin using the [hrvst-cli](https://github.com/kgajera/hrvst-cli). Supports duplicating last week's timesheet with review before submitting, quick time logging with aliases, weekly timesheet review with gap detection, auto-install of Harvest CLI, and natural language time entry.
+
+## Key Features
 
 - Duplicate last week's timesheet with review before submitting
 - Quick time logging with aliases
@@ -10,63 +24,23 @@ Efficient Harvest time tracking for employees and contractors using the [hrvst-c
 - Auto-install of Harvest CLI
 - Natural language time entry
 
-## Prerequisites
+## Use Cases
 
-- Node.js v14 or higher
-- A Harvest account with time tracking access
-
-## Installation
-
-Install the plugin in Claude Code:
-
-```bash
-claude mcp add-plugin sabai-harvest
-```
-
-Then run `/setup-harvest` to install the CLI and configure your account.
+- "Duplicate last week's timesheet"
+- "Log 2 hours to client-dev project"
+- "Show me my timesheet for this week"
+- "Review my time entries for gaps"
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `/setup-harvest` | Install CLI, authenticate, and create aliases |
-| `/duplicate-week` | Copy last week's entries with review before submitting |
-| `/log [hours] [project]` | Quick time entry |
-| `/timesheet [day\|week]` | View your timesheet |
+- `/setup-harvest` - Install CLI, authenticate, and create aliases
+- `/duplicate-week` - Copy last week's entries with review before submitting
+- `/log [hours] [project]` - Quick time entry
+- `/timesheet [day|week]` - View your timesheet
 
-## Usage Examples
+## Configuration
 
-### Duplicate Last Week
-
-```
-/duplicate-week
-```
-
-This shows last week's entries, lets you adjust hours/projects/notes, and only submits after you confirm.
-
-### Quick Logging
-
-```
-/log 2 client-dev
-/log 1.5 meetings
-/log 8
-```
-
-### Review Timesheet
-
-```
-/timesheet week
-```
-
-## Skills
-
-- **Harvest Setup** - CLI installation and alias configuration
-- **Time Entry** - Efficient logging workflows
-- **Weekly Review** - Gap detection and timesheet completion
-
-## CLI Commands Reference
-
-The plugin uses these hrvst-cli commands:
+### CLI Commands Reference
 
 | Action | Command |
 |--------|---------|
@@ -79,7 +53,20 @@ The plugin uses these hrvst-cli commands:
 | List aliases | `hrvst alias list` |
 | Create alias | `hrvst alias create <name>` |
 
-## Tips for Efficient Time Tracking
+## Authentication
+
+Harvest account required. Run `/setup-harvest` to authenticate via `hrvst login`.
+
+## Dependencies
+
+- **Required**: Node.js v14+, Harvest account
+
+## Limitations
+
+- Requires hrvst-cli to be installed globally
+- Works only with Harvest time tracking (not other providers)
+
+## Tips
 
 1. **Create aliases** for all your regular projects
 2. **Review weekly** to catch any gaps
@@ -87,6 +74,7 @@ The plugin uses these hrvst-cli commands:
 
 ## Links
 
+- [README](https://github.com/sabaisystem/sabai-claude-marketplace/tree/main/plugins/sabai-harvest)
+- [CHANGELOG](https://github.com/sabaisystem/sabai-claude-marketplace/tree/main/plugins/sabai-harvest/CHANGELOG.md)
 - [Harvest CLI Documentation](https://kgajera.github.io/hrvst-cli/)
 - [Harvest](https://www.getharvest.com/)
-- [Sabai System](https://sabaisystem.com)

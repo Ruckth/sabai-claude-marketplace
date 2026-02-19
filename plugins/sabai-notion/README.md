@@ -1,147 +1,99 @@
 # Sabai Notion
 
-Documentation workflow plugin with Notion integration. Create, update, and sync documentation between your codebase and Notion pages.
+**Documentation workflow plugin with Notion integration for creating, updating, and syncing documentation.**
 
-## Features
+| Field | Value |
+|-------|-------|
+| Type | MCP + Skills + Commands |
+| Version | 1.0.0 |
+| Status | Active |
+| Command | `/docs`, `/publish`, `/import`, `/sync`, `/notion-search` |
+| Repo | `plugins/sabai-notion` |
 
-- **Generate Documentation** - Auto-generate docs from code (functions, classes, APIs)
-- **Publish to Notion** - Push markdown documentation to Notion pages
-- **Import from Notion** - Pull Notion content to local files
-- **Bidirectional Sync** - Keep local docs and Notion in sync
-- **Search Notion** - Find pages and databases in your workspace
+---
 
-## Installation
+## Overview
 
-### Prerequisites
+A documentation workflow plugin with Notion integration. Create, update, and sync documentation between your codebase and Notion pages. Supports auto-generating docs from code (functions, classes, APIs), publishing markdown to Notion, importing Notion content to local files, and bidirectional sync.
 
-- Node.js 18+
-- Notion Integration Token ([Get one here](https://www.notion.so/my-integrations))
+## Key Features
 
-### Setup
+- Generate documentation from code (functions, classes, APIs)
+- Publish markdown documentation to Notion pages
+- Import Notion content to local files
+- Bidirectional sync between local docs and Notion
+- Search pages and databases in your workspace
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/sabaisystem/sabai-claude-marketplace.git
-   ```
+## Use Cases
 
-2. Navigate to the plugin:
-   ```bash
-   cd sabai-claude-marketplace/plugins/sabai-notion/mcp
-   ```
+- "Generate documentation for src/api/ and publish it to Notion"
+- "Import my API docs from Notion to docs/api.md"
+- "Sync my project docs to Notion"
+- "Search for project documentation in Notion"
 
-3. Install dependencies:
-   ```bash
-   npm install
-   ```
+## Commands
 
-4. Add to your Claude configuration:
+- `/docs [file]` - Generate documentation from code
+- `/publish [file]` - Publish documentation to Notion
+- `/import [url]` - Import content from Notion
+- `/sync [path]` - Sync docs between local and Notion
+- `/notion-search [query]` - Search your Notion workspace
 
-   **For Claude Desktop** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
-   ```json
-   {
-     "mcpServers": {
-       "sabai-notion": {
-         "command": "bash",
-         "args": ["/path/to/plugins/sabai-notion/mcp/startup.sh"],
-         "env": {
-           "NOTION_API_KEY": "your-notion-integration-token"
-         }
-       }
-     }
-   }
-   ```
+## MCP Tools
 
-   **For Claude Code** (`.claude/settings.local.json`):
-   ```json
-   {
-     "mcpServers": {
-       "sabai-notion": {
-         "command": "bash",
-         "args": ["/path/to/plugins/sabai-notion/mcp/startup.sh"],
-         "env": {
-           "NOTION_API_KEY": "your-notion-integration-token"
-         }
-       }
-     }
-   }
-   ```
+- `notion_search` - Search pages and databases
+- `notion_get_page` - Get page content as markdown
+- `notion_create_page` - Create a new page
+- `notion_update_page` - Update page content
+- `notion_append_content` - Append to existing page
+- `notion_list_databases` - List all databases
+- `notion_query_database` - Query database entries
+- `generate_docs_from_code` - Generate docs from code
 
-5. Restart Claude
+## Configuration
 
-## Notion Setup
+### Environment Variables
+
+- `NOTION_API_KEY` - Your Notion integration token (required)
+
+### MCP Server Setup
+
+```json
+{
+  "mcpServers": {
+    "sabai-notion": {
+      "command": "bash",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/startup.sh"],
+      "env": {
+        "NOTION_API_KEY": "${NOTION_API_KEY}"
+      }
+    }
+  }
+}
+```
+
+## Authentication
+
+Notion Integration Token required. Create one at [Notion Integrations](https://www.notion.so/my-integrations).
+
+### Notion Setup
 
 1. Go to [Notion Integrations](https://www.notion.so/my-integrations)
 2. Create a new integration
 3. Copy the integration token
 4. Share the Notion pages/databases you want to access with your integration
 
-## Commands
+## Dependencies
 
-| Command | Description |
-|---------|-------------|
-| `/docs [file]` | Generate documentation from code |
-| `/publish [file]` | Publish documentation to Notion |
-| `/import [url]` | Import content from Notion |
-| `/sync [path]` | Sync docs between local and Notion |
-| `/notion-search [query]` | Search your Notion workspace |
+- **Required**: Node.js 18+, Notion Integration Token
 
-## Skills
+## Limitations
 
-- **doc-generation** - Generate comprehensive docs from source code
-- **notion-sync** - Manage bidirectional sync workflows
-- **doc-structure** - Best practices for documentation architecture
-
-## MCP Tools
-
-| Tool | Description |
-|------|-------------|
-| `notion_search` | Search pages and databases |
-| `notion_get_page` | Get page content as markdown |
-| `notion_create_page` | Create a new page |
-| `notion_update_page` | Update page content |
-| `notion_append_content` | Append to existing page |
-| `notion_list_databases` | List all databases |
-| `notion_query_database` | Query database entries |
-| `generate_docs_from_code` | Generate docs from code |
-
-## Usage Examples
-
-### Generate and Publish API Docs
-
-```
-Generate documentation for src/api/ and publish it to Notion
-```
-
-### Import Documentation
-
-```
-/import https://notion.so/my-api-docs-page docs/api.md
-```
-
-### Sync Project Docs
-
-```
-/sync docs/ push
-```
-
-### Search Workspace
-
-```
-/notion-search project documentation
-```
-
-## Environment Variables
-
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `NOTION_API_KEY` | Yes | Notion integration token |
-
-## License
-
-MIT License - see [LICENSE](../../LICENSE) for details.
+- Pages must be explicitly shared with your integration
+- API rate limits apply per Notion guidelines
 
 ## Links
 
-- [Sabai System](https://sabaisystem.com)
+- [README](https://github.com/sabaisystem/sabai-claude-marketplace/tree/main/plugins/sabai-notion)
+- [CHANGELOG](https://github.com/sabaisystem/sabai-claude-marketplace/tree/main/plugins/sabai-notion/CHANGELOG.md)
 - [Notion API Documentation](https://developers.notion.com)
-- [Report Issues](https://github.com/sabaisystem/sabai-claude-marketplace/issues)
