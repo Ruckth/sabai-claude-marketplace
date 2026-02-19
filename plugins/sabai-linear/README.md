@@ -32,28 +32,43 @@ Product Manager assistant with Linear integration. Create tickets from templates
 
 ## Prerequisites
 
-- Linear MCP server configured and connected
 - Linear API key with appropriate permissions
+- Node.js 18+
 
 ### Setting up Linear MCP
 
-Add to your Claude configuration:
+1. **Get your Linear API Key**
+   - Go to [Linear Settings → API → Personal API Keys](https://linear.app/settings/api)
+   - Create a new API key with read/write access
 
-```json
-{
-  "mcpServers": {
-    "linear": {
-      "command": "npx",
-      "args": ["-y", "@linear/mcp-server"],
-      "env": {
-        "LINEAR_API_KEY": "your-linear-api-key"
-      }
-    }
-  }
-}
-```
+2. **Set the environment variable** (recommended for security):
+   ```bash
+   export LINEAR_API_KEY="lin_api_your_key_here"
+   ```
 
-Get your API key from: Linear Settings → API → Personal API Keys
+   Or add to your shell profile (`~/.zshrc` or `~/.bashrc`):
+   ```bash
+   export LINEAR_API_KEY="lin_api_your_key_here"
+   ```
+
+3. **Add MCP configuration** to `.mcp.json` in your project root:
+   ```json
+   {
+     "mcpServers": {
+       "linear": {
+         "command": "npx",
+         "args": ["-y", "@mseep/linear-mcp@latest"],
+         "env": {
+           "LINEAR_API_KEY": "${LINEAR_API_KEY}"
+         }
+       }
+     }
+   }
+   ```
+
+   > **Important:** Add `.mcp.json` to your `.gitignore` to avoid committing API keys. Use `${LINEAR_API_KEY}` to reference environment variables instead of hardcoding keys.
+
+4. **Restart Claude Code** to load the MCP server
 
 ## Commands
 
