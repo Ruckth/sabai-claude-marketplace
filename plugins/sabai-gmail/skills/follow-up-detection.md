@@ -100,9 +100,9 @@ Found **X emails** from the last Y days that may need your response:
 
 This skill uses the Gmail MCP server with these tools:
 
-1. **`search`** - Search emails with Gmail query syntax
-2. **`get_thread`** - Get full thread to check for replies
-3. **`get_message`** - Get email details and body
+1. **`gmail_search`** - Search emails with Gmail query syntax
+2. **`gmail_get_message`** - Get email details, body, and thread info
+3. **`gmail_list_inbox`** - List recent inbox emails
 
 ### Gmail Query Syntax Reference
 
