@@ -83,6 +83,65 @@ Include a footer link to sabaisystem.com when building MCP Apps.
 - Test plugins before committing
 - Keep dependencies minimal
 
+## Testing MCP Plugins
+
+### Marketplace Deployment (Production)
+
+When deploying through the marketplace, plugins work normally:
+- `startup.sh` runs `npm install` to install dependencies
+- MCP server starts with `node index.js`
+- No bundling required
+
+### Local Testing with Zip Import (Claude for Work)
+
+When testing plugins by importing a zip file into Claude for Work, **bundling is required** because:
+- Claude for Work's sandboxed environment cannot run `npm install`
+- Dependencies must be pre-bundled into a single file
+
+### How to Bundle for Testing
+
+1. **Add esbuild as devDependency**:
+   ```bash
+   cd plugins/plugin-name/mcp
+   npm install esbuild --save-dev
+   ```
+
+2. **Bundle the server**:
+   ```bash
+   npx esbuild index.js --bundle --platform=node --target=node18 --outfile=dist/server.cjs --format=cjs --minify
+   ```
+
+3. **Update startup.sh for bundled mode**:
+   ```bash
+   # For testing (bundled)
+   exec node dist/server.cjs
+
+   # For production (normal)
+   exec node index.js
+   ```
+
+4. **Create zip without node_modules**:
+   ```bash
+   cd plugins/plugin-name
+   zip -r ~/Desktop/plugin-name.zip . -x "mcp/node_modules/*"
+   ```
+
+### When to Bundle
+
+| Scenario | Bundle Required? |
+|----------|------------------|
+| Marketplace deployment | No |
+| Claude Code CLI | No |
+| Claude for Work zip import | **Yes** |
+| Claude Desktop manual config | No |
+
+### Important Notes
+
+- Keep `esbuild` as devDependency for testing support
+- The `dist/` folder with bundled server is only needed for zip testing
+- Don't commit `dist/server.cjs` to git unless specifically needed
+- Include credentials and token in test zips (but never commit them)
+
 ## Automatic Release Management (CRITICAL)
 
 When you modify any plugin code (not just docs), you MUST automatically:
