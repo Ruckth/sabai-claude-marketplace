@@ -381,6 +381,8 @@ Always show both app and browser links when displaying tickets:
 
 ### Commands
 
+- `/status` - Show current git context and plugin status overview
+- `/status <plugin>` - Show detailed status for a specific plugin
 - `/todo <plugin> <description>` - Create a ticket and optionally start working
 - `/work-on <ticket-id>` - Work on an existing ticket
 - `/work-on <plugin>` - List and work on tickets for a plugin
