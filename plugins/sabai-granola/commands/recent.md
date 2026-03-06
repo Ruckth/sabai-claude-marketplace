@@ -42,4 +42,15 @@ Present meetings grouped by day, most recent first. Keep it concise — the user
 - **Investor Update Call** — 4:00 PM · with Mark, Emily
 ```
 
-If the user wants more detail on a specific meeting, suggest using `/sabai-granola:summary` or `/sabai-granola:ask`.
+## Follow-up Actions
+
+After displaying the meeting list, use `AskUserQuestion` to offer contextual next steps. Adapt the options based on what meetings were found. For example:
+
+- "Get a summary" → triggers `sabai-granola:summary` for a selected meeting
+- "See action items" → triggers `sabai-granola:actions` for meetings shown
+- "Search for something specific" → triggers `sabai-granola:search`
+- "Check upcoming follow-ups" → triggers `sabai-granola:next`
+
+Frame the question around the actual results. For example, if 3 meetings with Acme appeared:
+> "What would you like to do next with these meetings?"
+> Options: "Summarize the Acme Q1 Review", "See action items from this week", "Search for a specific topic", "Check upcoming follow-ups"
