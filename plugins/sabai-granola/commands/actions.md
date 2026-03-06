@@ -73,3 +73,17 @@ Look for language patterns like:
 - "Next steps: ..."
 
 Be inclusive rather than exclusive — it's better to surface a potential action item than to miss a real one. The user can ignore false positives.
+
+## Follow-up Actions
+
+After displaying action items, use `AskUserQuestion` to offer contextual next steps based on what was found. For example:
+
+If there are pending items with Acme:
+> "What would you like to do next?"
+> Options: "Draft a follow-up email to Acme about pending items", "Summarize the last Acme meeting", "Check upcoming commitments with Acme", "Get coached on follow-through"
+
+If overdue items were found:
+> "You have overdue items. What would you like to do?"
+> Options: "Draft a status update email", "Search for related meetings", "See the full summary of the source meeting"
+
+Always tie options to the specific action items, companies, or people that appeared in the output.
