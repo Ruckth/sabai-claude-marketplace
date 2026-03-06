@@ -36,7 +36,6 @@ This skill combines two tools:
 
 5. **Handle no results.** If nothing is found:
    - Suggest broadening the search (different keywords, wider date range)
-   - Suggest trying `/sabai-granola:ask` for a more conversational query
    - Check if the user might be thinking of a meeting that predates their Granola usage
 
 ## Tips for effective queries
@@ -46,3 +45,12 @@ The `query_granola_meetings` tool works best with natural language, so craft you
 - Prefer: "What was discussed about the budget in meetings with Acme?"
 
 This gives Granola's search more context to work with and returns better results.
+
+## Follow-up Actions
+
+After displaying search results, use `AskUserQuestion` to offer contextual next steps based on what was found. For example, if 3 meetings with Acme were found:
+
+> "What would you like to do with these results?"
+> Options: "Summarize the Acme Q1 Review", "Ask a question about these meetings", "See action items from Acme meetings", "Analyze the most recent Acme call"
+
+Always reference the specific meetings or topics that appeared in results. If only one meeting was found, offer deep-dive options for that specific meeting.
