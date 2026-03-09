@@ -18,7 +18,7 @@ Public marketplace for Claude plugins by [Sabai System](https://sabaisystem.com)
 | [sabai-tella](plugins/sabai-tella) | Tella video management and content planning | MCP + Commands | 1.0.0 | Active | 2026-02-16 |
 | [sabai-xero](plugins/sabai-xero) | Xero accounting: invoices, contacts, payments, reports | MCP + Skills + Commands | 1.0.0 | Active | 2026-02-20 |
 | [sabai-harvest](plugins/sabai-harvest) | Efficient Harvest time tracking for employees/contractors | Skills + Commands | 1.0.0 | Active | 2026-02-16 |
-| [sabai-discord](plugins/sabai-discord) | Discord assistant for server management and messaging | Skills + Commands | 1.0.0 | Active | 2026-02-16 |
+| [sabai-discord](plugins/sabai-discord) | Discord assistant for server management and messaging | MCP + Skills + Commands | 1.5.0 | Active | 2026-03-06 |
 | [sabai-slack](plugins/sabai-slack) | Full-featured Slack integration for messaging and search | MCP + Skills + Commands | 1.0.0 | Active | 2026-02-16 |
 | [sabai-recall](plugins/sabai-recall) | Meeting bot automation with Recall.ai for recording and transcription | MCP App + Commands | 1.4.0 | Active | 2026-02-16 |
 
