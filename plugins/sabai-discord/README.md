@@ -89,51 +89,176 @@ Bot permissions required:
 
 ## Bot Setup Guide
 
-Setting up a Discord bot requires creating an application on Discord's Developer Portal, generating a token, and inviting the bot to your server. This process takes approximately 15-30 minutes.
+Setting up the Discord bot for Claude Cowork. This guide walks you through creating a Discord bot, adding it to your server, and connecting it to the Sabai Discord plugin.
 
-For a detailed walkthrough with screenshots, see the [Discord Bot Setup Guide on Notion](https://www.notion.so/sabaisystem/Set-up-Discord-bot-for-Claude-co-work-31bcd22ff35f8037b86ada1407bc37c3).
+### Part 1: Create a Discord Bot
 
-### Step 1: Create a Discord Application
+#### Step 1: Open the Developer Portal
 
-1. Go to [Discord Developer Portal](https://discord.com/developers/applications)
-2. Click **"New Application"**
-3. Name it (e.g., "My Claude Bot")
-4. Accept the Terms of Service and click **"Create"**
+Go to [discord.com/developers/applications](https://discord.com/developers/applications) and click **"New Application"**.
 
-### Step 2: Enable Privileged Gateway Intents
+![New Application](docs/bot-setup/01-new-application.png)
 
-1. In the left sidebar, click **"Bot"**
-2. Scroll to **"Privileged Gateway Intents"**
-3. Enable all three:
-   - **Presence Intent** - See online/offline status
-   - **Server Members Intent** - List and look up members
-   - **Message Content Intent** - Read message text
-4. Click **"Save Changes"**
+#### Step 2: Name Your Bot
 
-### Step 3: Copy the Bot Token
+Enter a name for your bot, check the Terms of Service checkbox, and click **"Create"**.
 
-1. Still on the **"Bot"** page, find the **"Token"** section
-2. Click **"Reset Token"** (or "Copy" if first time)
-3. Copy the token immediately - Discord only shows it once
-4. **Never share this token** - it gives full bot access
+![Create App Dialog](docs/bot-setup/02-create-app-dialog.png)
 
-### Step 4: Generate Invite URL
+#### Step 3: Navigate to Bot Settings
 
-1. In the left sidebar, click **"OAuth2"**
-2. Under **"OAuth2 URL Generator"**:
-   - **Scopes**: Check `bot`
-   - **Bot Permissions**: Check: View Channels, Manage Channels, Manage Roles, Manage Webhooks, Send Messages, Send Messages in Threads, Create Public Threads, Create Private Threads, Manage Messages, Manage Threads, Embed Links, Attach Files, Read Message History, Add Reactions, Use External Emojis
-3. Copy the generated URL at the bottom
+In the left sidebar, click **"Bot"**.
 
-### Step 5: Invite the Bot
+![Navigate to Bot](docs/bot-setup/03-general-info.png)
 
-1. Paste the invite URL in a browser
-2. Select your Discord server
-3. Click **"Authorize"** and complete the CAPTCHA
+#### Step 4: Enable Privileged Gateway Intents
 
-### Step 6: Configure the Plugin
+Scroll down to **"Privileged Gateway Intents"** and enable all three:
+1. **Presence Intent**
+2. **Server Members Intent**
+3. **Message Content Intent**
 
-Paste your bot token using one of the methods in [Configuration](#configuration) above, then restart the plugin.
+Also check **Administrator** under Bot Permissions.
+
+![Enable Intents](docs/bot-setup/06-enable-intents-admin.png)
+
+Click **"Save Changes"**.
+
+![Save Changes](docs/bot-setup/07-save-changes.png)
+
+#### Step 5: Get the Install URL
+
+Navigate to **"Installation"** in the left sidebar. Copy the **Discord Provided Link** under Install Link.
+
+![Installation Page](docs/bot-setup/09-installation-page.png)
+
+### Part 2: Create a Discord Server & Add the Bot
+
+#### Step 6: Create a New Discord Server
+
+Open Discord and create a new server (click the **"+"** icon on the left sidebar).
+
+![Create Server](docs/bot-setup/10-create-server.png)
+
+#### Step 7: Invite the Bot to Your Server
+
+Open a browser and paste the install URL you copied in Step 5.
+
+![Paste Invite URL](docs/bot-setup/11-paste-invite-url.png)
+
+Click **"Add to Server"**, then select your server from the dropdown.
+
+![Select Server](docs/bot-setup/13-select-server.png)
+
+Click **"Authorize"**.
+
+![Authorize](docs/bot-setup/14-authorize.png)
+
+You should see a success message.
+
+![Success](docs/bot-setup/15-success.png)
+
+### Part 3: Install the Plugin in Claude Cowork
+
+#### Step 8: Add the Marketplace
+
+In Claude Cowork, click the **"+"** icon, then **"+ Add plugin"**.
+
+![Add Plugin](docs/bot-setup/16-cowork-add-plugin.png)
+
+Click **"Add marketplace from GitHub"** and enter: `Ruckth/sabai-claude-marketplace`, then click **"Sync"**.
+
+![Add Marketplace](docs/bot-setup/17-add-marketplace.png)
+
+#### Step 9: Install the Discord Plugin
+
+Find **"Sabai discord"** in the plugin list and click **"Install"**.
+
+![Browse Plugins](docs/bot-setup/18-browse-plugins.png)
+
+#### Step 10: Open Connectors
+
+After installing, click **"Connectors"** in the left sidebar under the Sabai discord plugin.
+
+![Plugin Connectors](docs/bot-setup/19-plugin-connectors.png)
+
+### Part 4: Configure the Bot Token
+
+#### Step 11: Get Your Bot Token
+
+Go back to the [Discord Developer Portal](https://discord.com/developers/applications), navigate to **"Bot"** in the left sidebar.
+
+![Bot Token Page](docs/bot-setup/20-bot-token-page.png)
+
+Click **"Reset Token"** and confirm.
+
+![Reset Token](docs/bot-setup/21-reset-token-confirm.png)
+
+Copy the generated token immediately — it will only be shown once.
+
+![Copy Token](docs/bot-setup/22-copy-token.png)
+
+#### Step 12: Configure the Token in Cowork
+
+Back in Claude Cowork, go to **Connectors** and click **"Edit"**.
+
+![Connector Settings](docs/bot-setup/23-connector-settings.png)
+
+Click **"Show in Folder"** to open the plugin directory.
+
+![Show in Folder](docs/bot-setup/24-show-in-folder.png)
+
+Open `plugin.json` with a text editor (e.g., TextEdit).
+
+![Open with TextEdit](docs/bot-setup/25-open-with-textedit.png)
+
+Paste your bot token as the value for `DISCORD_TOKEN`.
+
+![Paste Token](docs/bot-setup/26-paste-token.png)
+
+#### Step 13: Reload Cowork
+
+Press **Cmd + R** (Mac) or **Ctrl + R** (Windows) to reload. Verify the token appears in the Connector settings.
+
+![Token Configured](docs/bot-setup/28-token-configured.png)
+
+### Part 5: Authorize the Bot for Your Server
+
+#### Step 14: Copy Your Server ID and Client ID
+
+In Discord, right-click your server name and select **"Copy Server ID"**.
+
+> **Note:** You need to enable Developer Mode first: User Settings > Advanced > Developer Mode
+
+![Copy Server ID](docs/bot-setup/29-copy-server-id.png)
+
+Go to the Developer Portal > **"OAuth2"** and copy the **Client ID**.
+
+![OAuth2 Client ID](docs/bot-setup/30-oauth2-client-id.png)
+
+#### Step 15: Generate an Authorization Link
+
+In Claude Cowork, send a message like:
+
+> "Provide clickable link to set up Discord bot for Guild Id: YOUR_SERVER_ID, Client Id: YOUR_CLIENT_ID"
+
+Claude will generate a properly configured authorization link.
+
+![Claude Auth Link](docs/bot-setup/31-claude-auth-link.png)
+
+#### Step 16: Authorize the Bot
+
+Click the generated link, select your server, and click **"Continue"** then **"Authorize"**.
+
+![Authorize Bot](docs/bot-setup/32-authorize-bot.png)
+
+You should see a success confirmation.
+
+![Auth Success](docs/bot-setup/33-auth-success.png)
+
+The bot should now appear in your server's member list.
+
+![Bot in Server](docs/bot-setup/34-bot-in-server.png)
 
 ## Links
 
