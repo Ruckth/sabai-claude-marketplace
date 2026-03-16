@@ -171,10 +171,12 @@ Parse: `I=<impact>, C=<confidence>, E=<ease>`
    - Count tickets per category
    - If available, sum estimate points per category
    - Warn if Must Haves exceed 60% of total effort
-5. **Persist via labels:**
-   - Apply labels `moscow:must`, `moscow:should`, `moscow:could`, `moscow:wont` using `linear_update_issue`
-   - Fetch existing team labels via `linear_get_team` first
-   - Remove any existing `moscow:*` label before applying the new one
+5. **Persist via priority:** Update each ticket's priority using `linear_update_issue`:
+   - Must Have → `priority: 1` (Urgent)
+   - Should Have → `priority: 2` (High)
+   - Could Have → `priority: 3` (Medium)
+   - Won't Have → `priority: 4` (Low)
+   - Always confirm before applying: "Apply these priorities to Linear?"
 
 ### Batch Controls
 
@@ -192,7 +194,7 @@ Parse: `I=<impact>, C=<confidence>, E=<ease>`
 
 1. **Fetch scored issues** by reading issue descriptions for `<!-- prioritization-metadata -->` blocks
    - Use `linear_list_issues` to get issues, then `linear_get_issue` for each to read descriptions
-   - Also check for `moscow:*` labels
+   - Also check each issue's `priority` field (MoSCoW results are stored as priorities)
 
 2. **Display ranked table** sorted by score (highest first):
 
@@ -277,13 +279,18 @@ Store scores as a metadata block in the issue description. Use `<!-- prioritizat
 
 ### Category Scores (MoSCoW)
 
-Store as Linear labels: `moscow:must`, `moscow:should`, `moscow:could`, `moscow:wont`
+MoSCoW categories map directly to Linear's built-in priority field:
 
-- Fetch existing labels via `linear_get_team` to get label IDs
-- When applying, remove any existing `moscow:*` label first
-- Use `linear_update_issue` with `labelIds` to set labels
+| MoSCoW | Priority | Value |
+|--------|----------|-------|
+| Must Have | Urgent | `priority: 1` |
+| Should Have | High | `priority: 2` |
+| Could Have | Medium | `priority: 3` |
+| Won't Have | Low | `priority: 4` |
 
-### Priority Mapping
+Use `linear_update_issue` with the `priority` field. No custom labels required.
+
+### Priority Mapping (Rank View)
 
 Use `linear_update_issue` with the `priority` field (1-4) after ranking.
 
