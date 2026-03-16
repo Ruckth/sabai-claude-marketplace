@@ -131,6 +131,9 @@ Flag the following as risks:
 2. **Paused projects**: `state` is `"paused"` → "[warning] [Project Name] is paused"
 3. **Overdue milestones**: Any milestone with `status` = `"overdue"` → "[warning] Milestone '[name]' in [Project Name] is overdue"
 4. **No lead assigned**: Project has no `lead` and is `IN PROGRESS` → "[info] [Project Name] has no lead assigned"
+5. **Stale in-progress projects**: `state` is `"started"` and `progress` has not changed (or project `updatedAt` > 14 days ago) → "[warning] [Project Name] may be stalled — no progress in 14+ days"
+
+> **Dependency data:** The roadmap shows project-level status only. For ticket-level dependency graphs (blocks/blocked-by), use `/dependencies [project-name]`.
 
 ### Step 10: Compute Summary Statistics (Client-Side)
 
