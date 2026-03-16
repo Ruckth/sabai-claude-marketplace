@@ -5,6 +5,16 @@ All notable changes to this plugin will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-03-16
+
+### Changed
+- Rewrote `/risk` command with step-by-step MCP tool instructions
+- Simplified from 4 framework options to focused Impact x Likelihood analysis
+- Added real-time risk detection from Linear data (estimates, staleness, assignment, keywords)
+- Added project-level risk indicators (overdue, low progress, concentration risk)
+- Added dual mode: project-wide assessment and single-ticket deep analysis
+- Added optional tracking issue creation for Critical/High risks
+
 ## [1.2.0] - 2026-03-16
 
 ### Added
