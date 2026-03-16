@@ -495,7 +495,8 @@ async function handleTool(name: string, args: any) {
       let results;
       if (args.query) {
         results = await withRetry(() =>
-          linear.issueSearch(args.query, {
+          linear.issueSearch({
+            query: args.query,
             first: limit,
             ...(args.after ? { after: args.after } : {}),
             filter,
@@ -725,7 +726,7 @@ async function handleTool(name: string, args: any) {
     case "linear_get_cycles": {
       const filter: any = { team: { id: { eq: args.teamId } } };
       if (!args.includeCompleted) {
-        filter.completedAt = { null: true };
+        filter.isPast = { eq: false };
       }
 
       const cycles = await withRetry(() => linear.cycles({ filter, first: 20 }));

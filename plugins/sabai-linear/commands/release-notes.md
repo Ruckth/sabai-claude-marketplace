@@ -56,12 +56,14 @@ Resolve the cutoff date using this 3-tier priority:
    - The `--since` prefix is optional — bare dates like `Mar-1` work without it
 
 2. **Previous version provided** (second positional arg like `v2.0.0`): Run `git log -1 --format=%aI v2.0.0` to get the tag's author date and use as `sinceDate`
+   - **If git is unavailable** (e.g., CoWork sandbox): Inform the user: "No git repository available — cannot resolve version tag `v2.0.0`. Please use `--since [date]` instead (e.g., `--since Mar-1`)." and stop.
 
 3. **Neither provided** (just `/release-notes v2.1.0`): Git tag fallback —
    - Run `git describe --tags --abbrev=0` to find the most recent tag
    - Run `git log -1 --format=%aI [tag]` to get its date
    - Use that date as `sinceDate`
    - If no git tags exist at all, default to 14 days ago and inform the user: "No git tags found — showing issues completed in the last 14 days."
+   - **If git is unavailable** (e.g., CoWork sandbox): Default to 14 days ago and inform the user: "No git repository available — defaulting to issues completed in the last 14 days. Use `--since [date]` for a specific cutoff."
 
 Format `sinceDate` as ISO 8601 (e.g., `2026-03-01T00:00:00Z`).
 

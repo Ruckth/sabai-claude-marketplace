@@ -8,9 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.5.1] - 2026-03-16
 
 ### Fixed
+- `issueSearch` was called with two arguments instead of a single variables object, causing GraphQL double-JSON-encoding error on all text queries
+- `get_cycles` used invalid `completedAt: { null: true }` filter — replaced with `isPast: { eq: false }` per CycleFilter schema
 - `resolveIssueId` now uses exact filter matching (team key + issue number) instead of fuzzy `issueSearch` to prevent mismatches (e.g., SCM-1 matching SCM-10)
 - Date filters (`completedAfter`, `createdAfter`, `updatedAfter`) now have client-side fallback filtering in `linear_search_issues` and `linear_list_issues`
 - Team filter now has client-side fallback filtering to catch cases where the API ignores the `teamId` filter
+- `/release-notes` now handles missing git repository gracefully (CoWork sandbox) with actionable error message
 
 ### Added
 - `withRetry` wrapper for transient API failures (fetch failed, ECONNRESET, ETIMEDOUT, 429, 503) with exponential backoff
