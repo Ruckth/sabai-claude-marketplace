@@ -35,15 +35,35 @@ Generate professional release notes from completed Linear tickets, categorized b
 
 Resolve the cutoff date using this 3-tier priority:
 
-1. **Explicit date provided** (`--since Mar-1`): Parse directly to ISO 8601 (e.g., `2026-03-01T00:00:00Z`) and use as `sinceDate`
+1. **Explicit date provided** (`--since Mar-1`): Parse the date to ISO 8601 and use as `sinceDate`
+
+   #### Date Format Support
+
+   Accept any of these formats (all resolve to the current year unless a year is specified):
+
+   | Input | Parsed As |
+   |-------|-----------|
+   | `Mar-1` or `Mar-01` | March 1 of current year |
+   | `March 1` or `March 01` | March 1 of current year |
+   | `3/1` or `03/01` | March 1 of current year |
+   | `2026-03-01` | ISO format (already complete) |
+
+   **Parsing rules:**
+   - Month names: accept both abbreviated (`Jan`, `Feb`, ...) and full (`January`, `February`, ...), case-insensitive
+   - Separator: `-`, `/`, or space between month and day
+   - If no year is provided, assume the current year
+   - Output: ISO 8601 format (e.g., `2026-03-01T00:00:00Z`)
+   - The `--since` prefix is optional — bare dates like `Mar-1` work without it
 
 2. **Previous version provided** (second positional arg like `v2.0.0`): Run `git log -1 --format=%aI v2.0.0` to get the tag's author date and use as `sinceDate`
+   - **If git is unavailable** (e.g., CoWork sandbox): Inform the user: "No git repository available — cannot resolve version tag `v2.0.0`. Please use `--since [date]` instead (e.g., `--since Mar-1`)." and stop.
 
 3. **Neither provided** (just `/release-notes v2.1.0`): Git tag fallback —
    - Run `git describe --tags --abbrev=0` to find the most recent tag
    - Run `git log -1 --format=%aI [tag]` to get its date
    - Use that date as `sinceDate`
    - If no git tags exist at all, default to 14 days ago and inform the user: "No git tags found — showing issues completed in the last 14 days."
+   - **If git is unavailable** (e.g., CoWork sandbox): Default to 14 days ago and inform the user: "No git repository available — defaulting to issues completed in the last 14 days. Use `--since [date]` for a specific cutoff."
 
 Format `sinceDate` as ISO 8601 (e.g., `2026-03-01T00:00:00Z`).
 

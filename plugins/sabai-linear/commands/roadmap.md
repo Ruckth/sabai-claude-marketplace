@@ -55,6 +55,18 @@ Call `mcp__sabai-linear__linear_list_projects` with:
 
 This returns a list of projects with `id`, `name`, `description`, `state`, `progress`, `targetDate`.
 
+#### Handling No Match (Team or Project)
+
+If `--team` was specified but no fuzzy match was found for the team name:
+1. List all available teams from the `linear_get_teams` response
+2. Display: "No team matching '[input]' found. Available teams: [list of team names with keys]"
+3. Ask the user to choose a team or retry with a corrected name
+
+If a project name is referenced later (e.g., in a follow-up filter) but no fuzzy match is found:
+1. List all available projects from the `linear_list_projects` response
+2. Display: "No project matching '[input]' found. Available projects: [list of project names]"
+3. Ask the user to choose or retry
+
 ### Step 4: Enrich Projects with Full Details
 
 For each project from Step 3, call `mcp__sabai-linear__linear_get_project` with:
@@ -119,6 +131,9 @@ Flag the following as risks:
 2. **Paused projects**: `state` is `"paused"` → "[warning] [Project Name] is paused"
 3. **Overdue milestones**: Any milestone with `status` = `"overdue"` → "[warning] Milestone '[name]' in [Project Name] is overdue"
 4. **No lead assigned**: Project has no `lead` and is `IN PROGRESS` → "[info] [Project Name] has no lead assigned"
+5. **Stale in-progress projects**: `state` is `"started"` and `progress` has not changed (or project `updatedAt` > 14 days ago) → "[warning] [Project Name] may be stalled — no progress in 14+ days"
+
+> **Dependency data:** The roadmap shows project-level status only. For ticket-level dependency graphs (blocks/blocked-by), use `/dependencies [project-name]`.
 
 ### Step 10: Compute Summary Statistics (Client-Side)
 

@@ -40,7 +40,18 @@ If no framework is specified, present this table and ask the user to choose.
 | **Confidence** | "How confident are you in these estimates?" | 100% = High, 80% = Medium, 50% = Low |
 | **Effort** | "How many person-weeks to complete?" | Number (e.g., 2) |
 
-3. **Calculate and display:**
+3. **Validate inputs** before calculating:
+
+   | Factor | Valid Range | Error Message |
+   |--------|------------|---------------|
+   | Reach | >= 0 (integer) | "Reach must be a non-negative integer (e.g., 500)" |
+   | Impact | One of: 0.25, 0.5, 1, 2, 3 | "Impact must be one of: 0.25 (Minimal), 0.5 (Low), 1 (Medium), 2 (High), 3 (Massive)" |
+   | Confidence | 0-100 (percentage) | "Confidence must be between 0 and 100 (e.g., 80 for 80%)" |
+   | Effort | > 0 (number) | "Effort must be greater than 0 (person-weeks)" |
+
+   If any value is out of range, show the valid range and ask the user to re-enter that specific factor.
+
+4. **Calculate and display:**
 
 ```
 RICE Score for SCM-123: "Add SSO login"
@@ -54,7 +65,7 @@ RICE Score for SCM-123: "Add SSO login"
 | **RICE Score** | **(1000 * 2 * 0.8) / 2 = 800** |
 ```
 
-4. **Offer to save** score to Linear (see Score Storage below)
+5. **Offer to save** score to Linear (see Score Storage below)
 
 ### Quick Mode
 
@@ -83,7 +94,17 @@ Parse: `R=<reach>, I=<impact>, C=<confidence>, E=<effort>`
 | **Confidence** | "How confident are you in this assessment?" | 1-10 |
 | **Ease** | "How easy is this to implement?" | 1-10 |
 
-3. **Calculate and display:**
+3. **Validate inputs** before calculating:
+
+   | Factor | Valid Range | Error Message |
+   |--------|------------|---------------|
+   | Impact | 1-10 (integer) | "Impact must be between 1 and 10" |
+   | Confidence | 1-10 (integer) | "Confidence must be between 1 and 10" |
+   | Ease | 1-10 (integer) | "Ease must be between 1 and 10" |
+
+   If any value is out of range, show the valid range and ask the user to re-enter that specific factor.
+
+4. **Calculate and display:**
 
 ```
 ICE Score for SCM-456: "Improve onboarding"
@@ -96,7 +117,7 @@ ICE Score for SCM-456: "Improve onboarding"
 | **ICE Score** | **8 * 7 * 5 = 280** |
 ```
 
-4. **Offer to save** score to Linear
+5. **Offer to save** score to Linear
 
 ### Quick Mode
 
@@ -150,10 +171,12 @@ Parse: `I=<impact>, C=<confidence>, E=<ease>`
    - Count tickets per category
    - If available, sum estimate points per category
    - Warn if Must Haves exceed 60% of total effort
-5. **Persist via labels:**
-   - Apply labels `moscow:must`, `moscow:should`, `moscow:could`, `moscow:wont` using `linear_update_issue`
-   - Fetch existing team labels via `linear_get_team` first
-   - Remove any existing `moscow:*` label before applying the new one
+5. **Persist via priority:** Update each ticket's priority using `linear_update_issue`:
+   - Must Have → `priority: 1` (Urgent)
+   - Should Have → `priority: 2` (High)
+   - Could Have → `priority: 3` (Medium)
+   - Won't Have → `priority: 4` (Low)
+   - Always confirm before applying: "Apply these priorities to Linear?"
 
 ### Batch Controls
 
@@ -171,7 +194,7 @@ Parse: `I=<impact>, C=<confidence>, E=<ease>`
 
 1. **Fetch scored issues** by reading issue descriptions for `<!-- prioritization-metadata -->` blocks
    - Use `linear_list_issues` to get issues, then `linear_get_issue` for each to read descriptions
-   - Also check for `moscow:*` labels
+   - Also check each issue's `priority` field (MoSCoW results are stored as priorities)
 
 2. **Display ranked table** sorted by score (highest first):
 
@@ -256,13 +279,18 @@ Store scores as a metadata block in the issue description. Use `<!-- prioritizat
 
 ### Category Scores (MoSCoW)
 
-Store as Linear labels: `moscow:must`, `moscow:should`, `moscow:could`, `moscow:wont`
+MoSCoW categories map directly to Linear's built-in priority field:
 
-- Fetch existing labels via `linear_get_team` to get label IDs
-- When applying, remove any existing `moscow:*` label first
-- Use `linear_update_issue` with `labelIds` to set labels
+| MoSCoW | Priority | Value |
+|--------|----------|-------|
+| Must Have | Urgent | `priority: 1` |
+| Should Have | High | `priority: 2` |
+| Could Have | Medium | `priority: 3` |
+| Won't Have | Low | `priority: 4` |
 
-### Priority Mapping
+Use `linear_update_issue` with the `priority` field. No custom labels required.
+
+### Priority Mapping (Rank View)
 
 Use `linear_update_issue` with the `priority` field (1-4) after ranking.
 
