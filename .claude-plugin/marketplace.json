@@ -77,7 +77,7 @@
     {
       "name": "sabai-remotion",
       "source": "./plugins/sabai-remotion",
-      "description": "Create videos programmatically with Remotion. Preview compositions, render to MP4/WebM/GIF, and use templates for social media, tutorials, and data visualizations."
+      "description": "Remotion video production assistant for briefs, storyboards, composition plans, and render-ready implementation guidance."
     }
   ]
 }

@@ -1,80 +1,93 @@
 # Sabai Remotion
 
-**Create videos programmatically with Remotion**
+**Remotion video production assistant for briefs, storyboards, composition plans, and render-ready implementation guidance.**
 
 | Field | Value |
 |-------|-------|
-| Type | MCP App + Tools |
-| Version | 0.1.0 |
-| Status | In Progress |
-| Command | `/video` |
+| Type | Skills + Commands |
+| Version | 1.0.0 |
+| Status | Active |
+| Command | `/remotion`, `/storyboard`, `/scene`, `/render-plan` |
 | Repo | `plugins/sabai-remotion` |
 
 ---
 
 ## Overview
 
-A comprehensive plugin for creating videos programmatically using Remotion. Provides an interactive MCP App UI for previewing and composing videos, plus MCP tools for rendering videos from templates with dynamic data.
+Sabai Remotion helps turn rough ideas into structured Remotion work. It is designed for teams building product videos, explainers, social clips, launch assets, and internal motion content who need clear pre-production and implementation guidance before opening their editor.
+
+The plugin focuses on the parts Claude is good at: tightening the brief, splitting a concept into scenes, defining reusable composition structure, and producing implementation notes that map cleanly to a Remotion codebase.
 
 ## Key Features
 
-- Interactive video preview UI (MCP App)
-- Template-based video generation
-- Data-driven visualizations and animations
-- Multi-format export (MP4, WebM, GIF)
-- Social media presets (TikTok, Instagram, Twitter)
+- Turn a short prompt into a concrete Remotion production brief
+- Build storyboard and shot-by-shot scene plans with durations
+- Define composition hierarchy, props, timing, and transition ideas
+- Generate implementation handoff notes for a developer or motion designer
+- Adapt output for landscape, portrait, or square deliverables
 
 ## Use Cases
 
-- "Create a tutorial video showing how to use this feature"
-- "Generate a social clip from this data"
-- "Render an animated chart from my sales numbers"
-- "Preview my video composition at frame 30"
-
-## MCP Tools
-
-- `list_templates` - List available video templates with metadata
-- `preview_frame` - Generate a single frame preview (fast)
-- `render_video` - Render full video to file
-- `get_composition_info` - Get metadata about a composition
+- "Turn this launch announcement into a 30 second Remotion video"
+- "Storyboard a 9:16 social teaser for our product update"
+- "Help me break this script into scenes and transitions"
+- "Create a render plan for a Remotion composition with captions and charts"
 
 ## Commands
 
-- `/video` - Quick video generation from natural language
+- `/remotion [brief]` - Create or refine a complete Remotion video plan
+- `/storyboard [brief]` - Produce a storyboard with scenes, beats, and timing
+- `/scene [brief or scene goal]` - Drill into a single scene's layout, motion, and copy
+- `/render-plan [brief or code context]` - Prepare a render-ready implementation handoff
 
 ## Configuration
 
-### System Requirements
+### Settings
 
-- Node.js 18+
-- Chromium (bundled with Remotion)
-- FFmpeg (bundled with Remotion 4.x)
+Customize defaults in plugin settings:
 
-### MCP Server
+```json
+{
+  "preferences": {
+    "default_format": "landscape-16:9",
+    "default_fps": 30,
+    "default_duration_seconds": 30,
+    "brand_voice": "clear, modern, product-focused"
+  }
+}
+```
 
-The plugin runs an MCP server that manages Remotion rendering. No additional configuration required.
+| Preference | Description | Default |
+|------------|-------------|---------|
+| `default_format` | Default output format | landscape-16:9 |
+| `default_fps` | Default frame rate | 30 |
+| `default_duration_seconds` | Default video duration | 30 |
+| `brand_voice` | Default script/copy tone | clear, modern, product-focused |
 
 ## Authentication
 
 None required.
 
-## Permissions
-
-Required Claude Code permissions:
-- `Bash(command:*)` - Running the MCP server
-
 ## Dependencies
 
-- **Required**: Node.js 18+
-- **Bundled**: Chromium, FFmpeg (via Remotion)
+- **Required**: None for planning
+- **Optional**: A local Remotion project if you want the output translated directly into component or composition code
 
 ## Limitations
 
-- Video rendering can take time depending on duration and complexity
-- Large videos require significant disk space
-- First render may be slow due to Remotion bundle compilation
+- This plugin does not render videos by itself
+- Final code still depends on your project's Remotion setup, assets, and fonts
+- Complex motion direction may need iteration after the first pass
+
+## Tips
+
+- Start with audience, format, and duration before discussing animation details
+- Keep one visual idea per scene unless the video is intentionally dense
+- Use `/scene` to refine the hardest moment instead of reworking the entire storyboard
+- Use `/render-plan` when you are ready to hand work to a developer
 
 ## Links
 
 - [README](https://github.com/sabaisystem/sabai-claude-marketplace/tree/main/plugins/sabai-remotion)
 - [CHANGELOG](https://github.com/sabaisystem/sabai-claude-marketplace/tree/main/plugins/sabai-remotion/CHANGELOG.md)
+- [Remotion](https://www.remotion.dev)

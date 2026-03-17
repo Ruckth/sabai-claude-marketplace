@@ -1,17 +1,33 @@
 {
   "name": "sabai-remotion",
-  "description": "Create videos programmatically with Remotion. Preview compositions, render to MP4/WebM/GIF, and use templates for social media, tutorials, and data visualizations.",
-  "version": "0.1.0",
+  "description": "Remotion video production assistant for briefs, storyboards, composition plans, and render-ready implementation guidance.",
+  "version": "1.0.0",
   "author": {
     "name": "Sabai Team"
   },
-  "keywords": ["remotion", "video", "render", "mcp-app", "animation"],
+  "keywords": ["remotion", "video", "motion-design", "storyboard", "animation"],
   "skills": "./skills/",
   "commands": "./commands/",
-  "mcpServers": {
-    "sabai-remotion": {
-      "command": "bash",
-      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/startup.sh"]
+  "preferences": {
+    "default_format": {
+      "type": "string",
+      "description": "Preferred video format (for example landscape-16:9, portrait-9:16, or square-1:1)",
+      "default": "landscape-16:9"
+    },
+    "default_fps": {
+      "type": "number",
+      "description": "Preferred frames per second for new compositions",
+      "default": 30
+    },
+    "default_duration_seconds": {
+      "type": "number",
+      "description": "Default target duration for new videos in seconds",
+      "default": 30
+    },
+    "brand_voice": {
+      "type": "string",
+      "description": "Preferred tone for scripts and on-screen copy",
+      "default": "clear, modern, product-focused"
     }
   }
 }
