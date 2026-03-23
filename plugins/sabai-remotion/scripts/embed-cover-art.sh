@@ -1,18 +1,22 @@
 #!/bin/bash
 # embed-cover-art.sh — Render a still cover image and attach it to MP4 as cover art
 #
-# Usage: embed-cover-art.sh <entry-file> <composition-id> <output-mp4>
+# Usage: embed-cover-art.sh <entry-file> <composition-id> <output-mp4> [cover-frame]
+#
+# Arguments:
+#   cover-frame   Specific frame number to use as cover (default: last frame)
 #
 # Notes:
-# - Cover source: composition's last frame (durationInFrames - 1) parsed from Root.tsx
+# - Cover source: specified frame, or composition's last frame (durationInFrames - 1) parsed from Root.tsx
 # - Embedding method: MP4 attached picture (ffmpeg `attached_pic`)
 # - Failure policy: this script never fails the overall pipeline; it falls back gracefully.
 
 set -uo pipefail
 
-ENTRY_FILE="${1:?Usage: embed-cover-art.sh <entry-file> <composition-id> <output-mp4>}"
+ENTRY_FILE="${1:?Usage: embed-cover-art.sh <entry-file> <composition-id> <output-mp4> [cover-frame]}"
 COMPOSITION_ID="${2:?Missing composition ID}"
 OUTPUT_MP4="${3:?Missing output MP4 path}"
+COVER_FRAME="${4:-}"
 
 if [ ! -f "${OUTPUT_MP4}" ] || [ ! -s "${OUTPUT_MP4}" ]; then
   echo "Warning: embed-cover-art: output MP4 missing/empty (${OUTPUT_MP4})" >&2
@@ -36,43 +40,47 @@ if [ ! -x "${RENDER_STILL_SH}" ]; then
   exit 0
 fi
 
-ROOT_TSX="$(cd "$(dirname "${ENTRY_FILE}")" && pwd)/Root.tsx"
-if [ ! -f "${ROOT_TSX}" ]; then
-  echo "Warning: embed-cover-art: Root.tsx not found (${ROOT_TSX}), using frame 0" >&2
-  LAST_FRAME=0
+# Use specified frame, or fall back to last frame from Root.tsx
+if [ -n "${COVER_FRAME}" ]; then
+  SELECTED_FRAME="${COVER_FRAME}"
 else
-  DURATION_IN_FRAMES="$(
-    node -e "
-      const fs = require('fs');
-      const path = process.argv[1];
-      const compId = process.argv[2];
-      const content = fs.readFileSync(path, 'utf8');
-
-      function firstMatch(re) {
-        const m = content.match(re);
-        return m && m[1] ? m[1] : null;
-      }
-
-      // Prefer durationInFrames from the Composition block matching `id=\"${compId}\"`.
-      const blockRe = new RegExp(
-        'id\\\\s*=\\\\s*[\"\\\']' + compId.replace(/[.*+?^${}()|[\\\\]\\\\]/g, '\\\\$&') + '[\"\\\'][\\\\s\\\\S]*?durationInFrames\\\\s*=\\\\s*\\\\{?\\\\s*([0-9]+)\\\\s*\\\\}?'
-      );
-      const d1 = firstMatch(blockRe);
-      const d2 = firstMatch(/durationInFrames\\s*=\\s*\\{?\\s*([0-9]+)\\s*\\}?/);
-
-      const val = d1 || d2;
-      if (!val) process.exit(0);
-      process.stdout.write(String(val));
-    " "${ROOT_TSX}" "${COMPOSITION_ID}" 2>/dev/null
-  )"
-
-  if [ -z "${DURATION_IN_FRAMES}" ]; then
-    echo "Warning: embed-cover-art: couldn't parse durationInFrames, using frame 0" >&2
-    LAST_FRAME=0
+  ROOT_TSX="$(cd "$(dirname "${ENTRY_FILE}")" && pwd)/Root.tsx"
+  if [ ! -f "${ROOT_TSX}" ]; then
+    echo "Warning: embed-cover-art: Root.tsx not found (${ROOT_TSX}), using frame 0" >&2
+    SELECTED_FRAME=0
   else
-    LAST_FRAME=$((DURATION_IN_FRAMES - 1))
-    if [ "${LAST_FRAME}" -lt 0 ]; then
-      LAST_FRAME=0
+    DURATION_IN_FRAMES="$(
+      node -e "
+        const fs = require('fs');
+        const path = process.argv[1];
+        const compId = process.argv[2];
+        const content = fs.readFileSync(path, 'utf8');
+
+        function firstMatch(re) {
+          const m = content.match(re);
+          return m && m[1] ? m[1] : null;
+        }
+
+        const blockRe = new RegExp(
+          'id\\\\s*=\\\\s*[\"\\\']' + compId.replace(/[.*+?^${}()|[\\\\]\\\\]/g, '\\\\$&') + '[\"\\\'][\\\\s\\\\S]*?durationInFrames\\\\s*=\\\\s*\\\\{?\\\\s*([0-9]+)\\\\s*\\\\}?'
+        );
+        const d1 = firstMatch(blockRe);
+        const d2 = firstMatch(/durationInFrames\\s*=\\s*\\{?\\s*([0-9]+)\\s*\\}?/);
+
+        const val = d1 || d2;
+        if (!val) process.exit(0);
+        process.stdout.write(String(val));
+      " "${ROOT_TSX}" "${COMPOSITION_ID}" 2>/dev/null
+    )"
+
+    if [ -z "${DURATION_IN_FRAMES}" ]; then
+      echo "Warning: embed-cover-art: couldn't parse durationInFrames, using frame 0" >&2
+      SELECTED_FRAME=0
+    else
+      SELECTED_FRAME=$((DURATION_IN_FRAMES - 1))
+      if [ "${SELECTED_FRAME}" -lt 0 ]; then
+        SELECTED_FRAME=0
+      fi
     fi
   fi
 fi
@@ -86,9 +94,9 @@ cleanup() {
 }
 trap cleanup EXIT
 
-echo "Embedding MP4 cover art: frame ${LAST_FRAME} (${COMPOSITION_ID})" >&2
+echo "Embedding MP4 cover art: frame ${SELECTED_FRAME} (${COMPOSITION_ID})" >&2
 
-if ! bash "${RENDER_STILL_SH}" "${ENTRY_FILE}" "${COMPOSITION_ID}" "${LAST_FRAME}" "${COVER_PNG}"; then
+if ! bash "${RENDER_STILL_SH}" "${ENTRY_FILE}" "${COMPOSITION_ID}" "${SELECTED_FRAME}" "${COVER_PNG}"; then
   echo "Warning: embed-cover-art: still render failed, skipping cover embedding" >&2
   exit 0
 fi
@@ -133,4 +141,3 @@ fi
 
 mv "${TMP_OUT}" "${OUTPUT_MP4}"
 echo "MP4 cover art embedded successfully: ${OUTPUT_MP4}" >&2
-

@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.6.0] - 2026-03-23
+
+### Added
+- AI-powered cover selection: after rendering, Claude shows key frames and recommends the best cover
+- Step 3.1 in SKILL.md for post-render cover selection
+- `apply-cover.sh` script that prepends a 2-second cover intro and embeds the MP4 thumbnail in one step
+- `prepend-cover-frame.sh` script for rendering and prepending cover frames
+- Users pick a cover frame or choose "no cover" — simple two-option flow
+
+### Changed
+- Cover selection now happens AFTER rendering (not before), so the user sees the video first
+- `render-video.sh` is now a pure render script — no cover logic, no automatic thumbnail embedding
+- `embed-cover-art.sh` accepts optional frame number argument instead of always using last frame
+- Removed `--cover-frame` and `--cover-intro` flags from `render-video.sh` — cover is applied separately via `apply-cover.sh`
+
 ## [3.5.1] - 2026-03-23
 
 ### Added

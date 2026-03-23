@@ -41,6 +41,9 @@ Create a new video from a natural language description.
 7. Auto-generate a GIF preview for the user to review the animation
 8. Provide both the GIF preview and MP4 download link
 
+**Cover selection:**
+After rendering, key frames are shown to the user. The AI recommends the best frame as cover. If the user picks one, it becomes both the video thumbnail and a 2-second visible intro at the start. If not, the video stays as-is.
+
 **Examples:**
 ```
 /video create A 30-second intro animation with our logo

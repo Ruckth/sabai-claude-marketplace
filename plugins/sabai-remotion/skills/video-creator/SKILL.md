@@ -242,6 +242,35 @@ Do NOT show check screenshots to the user unless they used `/video validate`. Ju
    - Mention the video specs (resolution, duration, fps, file size)
    - Mention the GIF is a lower-quality preview (480px wide, 15fps) — the MP4 is the full-quality deliverable
 
+4. **Proceed to Step 3.1** for cover selection (MP4 only).
+
+### Step 3.1: Cover Selection (MP4 only)
+
+After the video is rendered and the GIF preview is shown, offer cover options. **Do NOT blindly use the last frame** — it may be an empty background or fade-out.
+
+**1. Show key frames to the user.** Reuse the scene-check PNGs from Step 2.5 (in `/tmp/scene-checks/`). Show each screenshot inline with its frame number.
+
+**2. Recommend the best cover frame** — pick the frame that:
+   - Has the most visual impact (bold text, graphics, data)
+   - Best represents the video's content at a glance
+   - Has good contrast and readability as a thumbnail
+   - Is NOT an empty/faded/transitional frame
+
+**3. Ask the user:**
+> "I recommend **frame N** as the cover — it shows [brief reason].
+> The cover adds a 2-second still intro at the start and sets the video thumbnail.
+>
+> Pick a frame number, or say **no cover** to keep the video as-is."
+
+**4. Apply the user's choice:**
+- If user picks frame N:
+  ```bash
+  bash "${CLAUDE_PLUGIN_ROOT}/scripts/apply-cover.sh" \
+    /tmp/remotion-project/src/index.ts main "${OUTPUT_DIR}/video.mp4" <N>
+  ```
+  Then present the updated MP4 download link. Note: the GIF preview shows the animation content only (without the 2s cover intro).
+- If user says "no cover": done, the video stays as-is.
+
 ### Step 3b: Render LinkedIn Carousel (PDF)
 
 When the user requested a **LinkedIn carousel**, follow this flow instead of Step 3:
