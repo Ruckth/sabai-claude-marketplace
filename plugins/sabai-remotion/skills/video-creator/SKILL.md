@@ -40,9 +40,11 @@ The `/video` command supports subcommands. Route based on what the user typed:
 | `/video` (no args) | Show help text with available subcommands |
 | `/video create [desc]` | → Step 1 below |
 | `/video carousel [desc]` | → Step 1 with LinkedIn Carousel preset (1200×1500, PDF output) |
+| `/video presentation [desc]` | → Step 1 with Presentation preset (1920×1080, PDF output) |
 | `/video preview` | → Step 3 (render MP4 + GIF) |
+| `/video validate` | → Step 2.5 (visual scene validation) |
 | `/video render [opts]` | → Step 5 (final render) |
-| `/video templates` | List templates from `references/templates.md` |
+| `/video templates` | List templates from `references/templates/` |
 | `/video <description>` | Treat as `/video create <description>` |
 
 ## Conversational Flow
@@ -66,6 +68,7 @@ When the user asks to create a video, determine what they need. Reference `refer
 - "Instagram post" → 1080×1080 (1:1), 30fps
 - "Story" → 1080×1920 (9:16), 30fps
 - "LinkedIn carousel", "carousel" → 1200×1500, 1fps (carousel mode — see Step 3b)
+- "presentation", "deck", "pitch deck", "slides PDF" → 1920×1080, 1fps (presentation mode — see Step 3c)
 
 **Auto-detect output format from context clues:**
 - "WebM" → `--codec=vp8`, output `.webm`
@@ -104,7 +107,7 @@ Only proceed to code generation after the user confirms (or if the request was s
 
 ### Step 2: Generate the Remotion Component
 
-Write a complete Remotion composition to `/tmp/remotion-project/src/`. Reference `references/remotion-patterns.md` for animation patterns and `references/templates.md` for starter templates.
+Write a complete Remotion composition to `/tmp/remotion-project/src/`. Reference `references/remotion-patterns.md` for animation patterns, `references/templates/` for starter templates, and `references/pixel-font-data.md` for pixel font character maps.
 
 **File structure for each video:**
 ```
@@ -179,9 +182,43 @@ export const Root: React.FC = () => {
 };
 ```
 
+### Step 2.5: Visual Scene Validation (MANDATORY)
+
+Before rendering the full video, validate the composition by rendering key frames as screenshots and checking for visual issues. This catches layout problems before wasting a full render.
+
+**1. Determine key frames** from the code you just wrote:
+   - First frame (0) and last frame (durationInFrames - 1)
+   - Start of each `<Sequence>` or major animation phase
+   - Mid-composition frame
+   - Minimum 3, maximum 6 frames (de-duplicate)
+
+**2. Render check frames:**
+   ```bash
+   bash "${CLAUDE_PLUGIN_ROOT}/scripts/render-scene-checks.sh" \
+     /tmp/remotion-project/src/index.ts main "0,59,120,239"
+   ```
+
+**3. View each screenshot** and check for:
+   - [ ] No elements clipped or going off-screen
+   - [ ] No text overlapping other text or elements
+   - [ ] No empty frames where content is expected
+   - [ ] Text is readable (sufficient size and contrast)
+   - [ ] Layout is balanced (no elements bunched with wasted space)
+   - [ ] No visual artifacts or broken rendering
+
+**4. If issues found:**
+   - Fix the Video.tsx
+   - Re-render only the affected frames
+   - Re-check (max 2 fix attempts)
+   - If still broken after 2 attempts, proceed but warn the user
+
+**5. If all checks pass:** Tell the user "Scene checks passed" and proceed to Step 3.
+
+Do NOT show check screenshots to the user unless they used `/video validate`. Just report the outcome briefly.
+
 ### Step 3: Render MP4 and Generate GIF Preview
 
-After generating the component, render the final MP4 video and automatically create a GIF preview.
+**CRITICAL: You MUST always generate BOTH the MP4 AND the GIF preview. Never skip the GIF. The user relies on the GIF to review the animation inline before downloading the MP4. This applies to every render — initial creation, iterations, and re-renders.**
 
 1. **Render the MP4 video**:
    ```bash
@@ -193,13 +230,13 @@ After generating the component, render the final MP4 video and automatically cre
      /tmp/remotion-project/src/index.ts main "${OUTPUT_DIR}/video.mp4"
    ```
 
-2. **Auto-generate GIF preview** from the rendered video:
+2. **ALWAYS generate GIF preview** (never skip this step):
    ```bash
    bash "${CLAUDE_PLUGIN_ROOT}/scripts/render-gif.sh" \
      /tmp/remotion-project/src/index.ts main "${OUTPUT_DIR}/preview.gif"
    ```
 
-3. **Present both to the user**:
+3. **Present BOTH to the user** (never present MP4 without the GIF):
    - Show the GIF preview inline so the user can quickly review the animation
    - Provide the MP4 download link: `computer://file/${OUTPUT_DIR}/video.mp4`
    - Mention the video specs (resolution, duration, fps, file size)
@@ -214,7 +251,7 @@ When the user requested a **LinkedIn carousel**, follow this flow instead of Ste
 - Each frame (0, 1, 2, ...) represents one slide
 - Use `useCurrentFrame()` to switch content per slide
 - The component uses the same rules as Step 2 (inline styles, web-safe fonts, no external assets)
-- See `references/templates.md` → "LinkedIn Carousel Template" for the starter pattern
+- See `references/templates/linkedin-carousel.md` for the starter pattern
 
 **Root.tsx pattern for carousel:**
 ```tsx
@@ -251,14 +288,61 @@ bash "${CLAUDE_PLUGIN_ROOT}/scripts/render-carousel.sh" \
 - Tell the user: "Upload this PDF directly to LinkedIn as a carousel post"
 - Offer to adjust content, colors, or add/remove slides
 
+### Step 3c: Render Presentation Deck (PDF)
+
+When the user requested a **presentation deck**, follow this flow instead of Step 3:
+
+**Presentation component rules:**
+- Composition: 1920×1080 px (16:9), **1 fps**, `durationInFrames` = number of slides
+- Each frame (0, 1, 2, ...) represents one slide
+- Use `useCurrentFrame()` to switch content per slide — no animations (`spring`, `interpolate` not needed)
+- Uses the Product Showcase visual design (icon badges, gradient backgrounds, title/subtitle)
+- The component uses the same rules as Step 2 (inline styles, web-safe fonts, no external assets)
+- See `references/templates/presentation-deck.md` for the starter pattern
+
+**Root.tsx pattern for presentation deck:**
+```tsx
+import { Composition } from "remotion";
+import { Video } from "./Video";
+
+export const Root: React.FC = () => {
+  return (
+    <Composition
+      id="presentation"
+      component={Video}
+      durationInFrames={5}  // = number of slides
+      fps={1}
+      width={1920}
+      height={1080}
+    />
+  );
+};
+```
+
+**Render the presentation PDF:**
+```bash
+OUTPUT_DIR=$(find /sessions -path "*/mnt/outputs" -type d 2>/dev/null | head -1)
+OUTPUT_DIR="${OUTPUT_DIR:-/tmp}"
+
+# NUM_SLIDES must match durationInFrames in Root.tsx
+bash "${CLAUDE_PLUGIN_ROOT}/scripts/render-carousel.sh" \
+  /tmp/remotion-project/src/index.ts presentation <NUM_SLIDES> "${OUTPUT_DIR}/presentation.pdf"
+```
+
+**Present to the user:**
+- Provide the PDF download link: `computer://file/${OUTPUT_DIR}/presentation.pdf`
+- Mention the number of slides and dimensions (1920×1080, 16:9 landscape)
+- Offer to adjust content, colors, or add/remove slides
+
 ### Step 4: Iteration
 
 When the user requests changes:
 
 1. **Modify the component** — Edit the specific file that needs changing
-2. **Re-render MP4** — Render the updated video
-3. **Re-generate GIF preview** — Auto-generate a new GIF so the user can review
-4. **Present both** — Show GIF preview + MP4 download link
+2. **Re-run Step 2.5** if changes affect layout, positioning, or text content. Skip for color-only or timing-only changes.
+3. **Re-render MP4** — Render the updated video
+4. **ALWAYS re-generate GIF preview** — Never skip this. Run `render-gif.sh` after every render.
+5. **Present BOTH** — Show GIF preview inline + MP4 download link. Never show only the MP4.
 
 **Common iteration patterns:**
 - "Make it faster/slower" → Adjust `durationInFrames` or interpolate ranges
@@ -289,7 +373,8 @@ When the user is satisfied:
 | Twitter/X | 1080 | 1080 | 30 | 140s | 1:1 square |
 | LinkedIn Video | 1920 | 1080 | 30 | 30s | 16:9 landscape |
 | LinkedIn Carousel | 1200 | 1500 | 1 | N slides | PDF output, 1 frame per slide |
-| Presentation | 1920 | 1080 | 30 | varies | 16:9, clean style |
+| Presentation (Video) | 1920 | 1080 | 30 | varies | 16:9, clean style |
+| Presentation (PDF) | 1920 | 1080 | 1 | N slides | PDF output, 1 frame per slide |
 
 ## Error Handling
 

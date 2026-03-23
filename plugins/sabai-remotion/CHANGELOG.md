@@ -1,5 +1,38 @@
 # Changelog
 
+## [3.5.0] - 2026-03-23
+
+### Added
+- Presentation Deck template — static Product Showcase design for PDF slide decks (1920×1080, 16:9)
+- `/video presentation [desc]` subcommand for creating presentation deck PDFs
+- Step 3c in SKILL.md for presentation deck rendering workflow
+- Auto-detect "presentation", "deck", "pitch deck" keywords to route to PDF output
+- Presentation (PDF) preset in platform presets table
+
+### Changed
+- Refactored templates into individual files (`references/templates/*.md`) for better progressive disclosure
+- Updated all template references in SKILL.md and commands to use individual files
+
+## [3.4.0] - 2026-03-23
+
+### Added
+- Visual scene validation (Step 2.5) — renders key frames as PNGs and checks for layout issues before full MP4 render
+- `render-scene-checks.sh` script for rendering specific frames as PNGs with GL fallback
+- `/video validate` subcommand for manual visual validation of the current composition
+
+### Changed
+- Video creation workflow now validates scenes before rendering MP4
+- Iteration step re-runs scene validation when layout/positioning/text changes are made
+
+## [3.3.0] - 2026-03-23
+
+### Added
+- 3D Retro Pixel Font template — animated cursors build text from 3D pixel blocks
+- 5×7 pixel font data reference with A–Z, 0–9, space, and punctuation (. ! ? - :)
+- 6 color scheme presets: classic, retro, neon, ocean, sunset, sabai
+- Typewriter subtitle animation with blinking cursor
+- Auto-scaling block size for long text strings
+
 ## [3.2.0] - 2026-03-19
 
 ### Added

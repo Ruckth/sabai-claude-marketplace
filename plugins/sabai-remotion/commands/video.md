@@ -85,6 +85,33 @@ Create a LinkedIn carousel (1200×1500 per slide) rendered as a PDF.
 
 ---
 
+### `/video presentation [description]`
+
+Create a presentation deck (1920×1080 per slide) rendered as a PDF.
+
+**Behavior:**
+1. Read and follow `skills/video-creator/SKILL.md` Step 3c for the presentation deck workflow
+2. Parse the description for content, number of slides, and style
+3. If description is vague, ask what the presentation is about and how many slides
+4. Generate a Remotion component where each frame = one slide (1920×1080, 1fps) using Product Showcase design
+5. Render all slides as PNGs and stitch into a single PDF via `render-carousel.sh`
+6. Provide the PDF download link
+
+**Examples:**
+```
+/video presentation 4 feature slides for Acme Tech
+/video presentation Pitch deck: problem, solution, market, team, CTA
+/video presentation Quarterly review with 6 key metrics
+/video presentation Product overview with 5 highlights
+```
+
+**Defaults:**
+- Slides: 4-6 (cover + features + CTA)
+- Dimensions: 1920×1080 (16:9 landscape)
+- Style: Product Showcase design (icon badges, gradient backgrounds)
+
+---
+
 ### `/video preview`
 
 Preview the current video composition.
@@ -129,12 +156,32 @@ Render the current video composition to a downloadable file.
 
 ---
 
+### `/video validate`
+
+Validate the current composition by rendering key frames and checking for visual issues.
+
+**Behavior:**
+1. Check that `/tmp/remotion-project/src/Video.tsx` exists
+   - If not: respond "No video to validate yet. Use `/video create [description]` to start."
+2. Read `Video.tsx` to determine scene structure (Sequences, durationInFrames) and calculate key frames
+3. Render check frames via `render-scene-checks.sh`
+4. Show each screenshot inline with analysis of any visual issues
+5. Report findings and offer to fix issues
+
+**Key frames are selected by:**
+- First frame (0) and last frame (durationInFrames - 1)
+- Start of each `<Sequence>` or major animation phase
+- Mid-composition frame
+- Minimum 3, maximum 6 frames
+
+---
+
 ### `/video templates`
 
 List available starter templates with descriptions.
 
 **Behavior:**
-1. Read `skills/video-creator/references/templates.md`
+1. Read the template files from `skills/video-creator/references/templates/`
 2. Display a summary table of available templates:
 
 ```
@@ -147,11 +194,13 @@ Available templates:
 | 3 | Product Showcase    | 12s      | Feature tours, product launches, ads  |
 | 4 | Text Announcement   | 4s       | Social posts, launches, announcements |
 | 5 | LinkedIn Carousel   | 7 slides | Carousels, tips, case studies (PDF)   |
+| 6 | 3D Retro Pixel Font | 8s       | Pixel text building, retro gaming, announcements |
+| 7 | Presentation Deck   | 5 slides | Pitch decks, feature overviews (PDF)  |
 
 Use `/video create` with a description, or tell me a template number to start from.
 ```
 
-3. If the user picks a template number, load that template's code from `references/templates.md` into `/tmp/remotion-project/src/Video.tsx` and ask what they'd like to customize (text, colors, timing, etc.)
+3. If the user picks a template number, load that template's code from the corresponding file in `references/templates/` into `/tmp/remotion-project/src/Video.tsx` and ask what they'd like to customize (text, colors, timing, etc.)
 
 ---
 
@@ -163,11 +212,13 @@ If the user runs just `/video` with no subcommand, show help:
 Sabai Remotion — Video Creation Pipeline
 
 Commands:
-  /video create [description]    Create a new video from a description
-  /video carousel [description]  Create a LinkedIn carousel PDF (1200×1500)
-  /video preview                 Preview the current video composition
-  /video render [options]        Render video to downloadable file
-  /video templates               Browse starter templates
+  /video create [description]         Create a new video from a description
+  /video carousel [description]       Create a LinkedIn carousel PDF (1200×1500)
+  /video presentation [description]   Create a presentation deck PDF (1920×1080)
+  /video preview                      Preview the current video composition
+  /video validate                     Validate scenes visually before rendering
+  /video render [options]             Render video to downloadable file
+  /video templates                    Browse starter templates
 
 Quick start:
   /video create "A 10-second intro with the text 'Hello World'"
@@ -183,7 +234,8 @@ If the user runs `/video` followed by something that doesn't match a subcommand 
 
 - `skills/video-creator/SKILL.md` — Full creation workflow, component rules, platform presets
 - `skills/video-creator/references/remotion-patterns.md` — Animation code snippets
-- `skills/video-creator/references/templates.md` — Complete starter templates
+- `skills/video-creator/references/templates/` — Complete starter templates (one file per template)
 - `skills/video-creator/references/clarifying-questions.md` — Question framework
+- `skills/video-creator/references/pixel-font-data.md` — 5×7 pixel font character maps
 
-**v3.2.0:** Videos now use responsive viewport-relative sizing, safe zone enforcement, and higher quality renders (CRF 18). All animations are bounded to prevent elements going off-screen.
+**v3.4.0:** Visual scene validation now checks key frames for layout issues before rendering the full video. Use `/video validate` for manual checks.
