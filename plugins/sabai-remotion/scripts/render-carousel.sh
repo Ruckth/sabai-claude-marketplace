@@ -6,7 +6,7 @@
 # Example:
 #   render-carousel.sh /tmp/remotion-project/src/index.ts carousel 5 /tmp/carousel.pdf
 #
-# Each frame (0..num_slides-1) is rendered as a 1200×1500 PNG, then stitched into a single PDF.
+# Each frame (0..num_slides-1) is rendered as a PNG (dimensions from composition), then stitched into a single PDF.
 
 set -euo pipefail
 

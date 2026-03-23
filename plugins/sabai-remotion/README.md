@@ -5,9 +5,9 @@
 | Field | Value |
 |-------|-------|
 | Type | Skills + Commands + Scripts |
-| Version | 3.3.0 |
+| Version | 3.5.1 |
 | Status | Active |
-| Command | `/video`, `/video carousel` |
+| Command | `/video`, `/video carousel`, `/video presentation`, `/video validate` |
 | Repo | `plugins/sabai-remotion` |
 
 ---
@@ -19,13 +19,15 @@ Sabai Remotion turns ideas into rendered videos. Describe what you want, and it 
 ## Key Features
 
 - Turn a prompt into a Remotion video (MP4 output)
+- Visual scene validation — checks key frames for layout issues before full render
 - Auto-generate GIF preview after every render for quick review
 - External image support — use product photos via HTTPS URLs with Remotion's `<Img>`
 - LinkedIn Carousel creation (1200×1500 slides → PDF)
+- Presentation Deck creation (1920×1080 slides → PDF) with Product Showcase design
 - Platform auto-detection (TikTok, YouTube, Instagram, LinkedIn, etc.)
 - Safe zone enforcement — responsive sizing prevents elements going off-screen
 - Animation patterns library (text reveals, transitions, data viz)
-- Ready-to-use templates (intro/outro, data viz, product showcase, product showcase with images, carousel)
+- Ready-to-use templates (intro/outro, data viz, product showcase, carousel, pixel font)
 
 ## Use Cases
 
@@ -37,7 +39,9 @@ Sabai Remotion turns ideas into rendered videos. Describe what you want, and it 
 
 - `/video create [description]` - Create a new video from a description
 - `/video carousel [description]` - Create a LinkedIn carousel PDF (1200×1500 per slide)
+- `/video presentation [description]` - Create a presentation deck PDF (1920×1080 per slide)
 - `/video preview` - Preview the current video (renders MP4 + GIF)
+- `/video validate` - Validate scenes visually before rendering
 - `/video render [options]` - Render video to downloadable file
 - `/video templates` - Browse starter templates
 

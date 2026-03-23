@@ -40,9 +40,11 @@ The `/video` command supports subcommands. Route based on what the user typed:
 | `/video` (no args) | Show help text with available subcommands |
 | `/video create [desc]` | → Step 1 below |
 | `/video carousel [desc]` | → Step 1 with LinkedIn Carousel preset (1200×1500, PDF output) |
+| `/video presentation [desc]` | → Step 1 with Presentation preset (1920×1080, PDF output) |
 | `/video preview` | → Step 3 (render MP4 + GIF) |
+| `/video validate` | → Step 2.5 (visual scene validation) |
 | `/video render [opts]` | → Step 5 (final render) |
-| `/video templates` | List templates from `references/templates.md` |
+| `/video templates` | List templates from `references/templates/` |
 | `/video <description>` | Treat as `/video create <description>` |
 
 ## Conversational Flow
@@ -66,6 +68,7 @@ When the user asks to create a video, determine what they need. Reference `refer
 - "Instagram post" → 1080×1080 (1:1), 30fps
 - "Story" → 1080×1920 (9:16), 30fps
 - "LinkedIn carousel", "carousel" → 1200×1500, 1fps (carousel mode — see Step 3b)
+- "presentation", "deck", "pitch deck", "slides PDF" → 1920×1080, 1fps (presentation mode — see Step 3c)
 
 **Auto-detect output format from context clues:**
 - "WebM" → `--codec=vp8`, output `.webm`
@@ -104,7 +107,7 @@ Only proceed to code generation after the user confirms (or if the request was s
 
 ### Step 2: Generate the Remotion Component
 
-Write a complete Remotion composition to `/tmp/remotion-project/src/`. Reference `references/remotion-patterns.md` for animation patterns and `references/templates.md` for starter templates.
+Write a complete Remotion composition to `/tmp/remotion-project/src/`. Reference `references/remotion-patterns.md` for animation patterns, `references/templates/` for starter templates, and `references/pixel-font-data.md` for pixel font character maps.
 
 **File structure for each video:**
 ```
@@ -124,8 +127,7 @@ Write a complete Remotion composition to `/tmp/remotion-project/src/`. Reference
 - Keep all styles inline or in the component (no external CSS files)
 - Use web-safe fonts only (no custom font loading)
 - Colors as hex values
-- Images: use Remotion's `<Img>` component with HTTPS URLs (see "Image Guidelines" below). No `require()` or local file imports
-- All non-image assets must be generated (SVG paths, CSS shapes)
+- All assets must be generated (SVG paths, CSS shapes) — no external image/video imports
 
 **Safe Layout Rules (CRITICAL — prevents elements going off-screen):**
 
@@ -180,9 +182,43 @@ export const Root: React.FC = () => {
 };
 ```
 
+### Step 2.5: Visual Scene Validation (MANDATORY)
+
+Before rendering the full video, validate the composition by rendering key frames as screenshots and checking for visual issues. This catches layout problems before wasting a full render.
+
+**1. Determine key frames** from the code you just wrote:
+   - First frame (0) and last frame (durationInFrames - 1)
+   - Start of each `<Sequence>` or major animation phase
+   - Mid-composition frame
+   - Minimum 3, maximum 6 frames (de-duplicate)
+
+**2. Render check frames:**
+   ```bash
+   bash "${CLAUDE_PLUGIN_ROOT}/scripts/render-scene-checks.sh" \
+     /tmp/remotion-project/src/index.ts main "0,59,120,239"
+   ```
+
+**3. View each screenshot** and check for:
+   - [ ] No elements clipped or going off-screen
+   - [ ] No text overlapping other text or elements
+   - [ ] No empty frames where content is expected
+   - [ ] Text is readable (sufficient size and contrast)
+   - [ ] Layout is balanced (no elements bunched with wasted space)
+   - [ ] No visual artifacts or broken rendering
+
+**4. If issues found:**
+   - Fix the Video.tsx
+   - Re-render only the affected frames
+   - Re-check (max 2 fix attempts)
+   - If still broken after 2 attempts, proceed but warn the user
+
+**5. If all checks pass:** Tell the user "Scene checks passed" and proceed to Step 3.
+
+Do NOT show check screenshots to the user unless they used `/video validate`. Just report the outcome briefly.
+
 ### Step 3: Render MP4 and Generate GIF Preview
 
-After generating the component, render the final MP4 video and automatically create a GIF preview.
+**CRITICAL: You MUST always generate BOTH the MP4 AND the GIF preview. Never skip the GIF. The user relies on the GIF to review the animation inline before downloading the MP4. This applies to every render — initial creation, iterations, and re-renders.**
 
 1. **Render the MP4 video**:
    ```bash
@@ -194,17 +230,46 @@ After generating the component, render the final MP4 video and automatically cre
      /tmp/remotion-project/src/index.ts main "${OUTPUT_DIR}/video.mp4"
    ```
 
-2. **Auto-generate GIF preview** from the rendered video:
+2. **ALWAYS generate GIF preview** (never skip this step):
    ```bash
    bash "${CLAUDE_PLUGIN_ROOT}/scripts/render-gif.sh" \
      /tmp/remotion-project/src/index.ts main "${OUTPUT_DIR}/preview.gif"
    ```
 
-3. **Present both to the user**:
+3. **Present BOTH to the user** (never present MP4 without the GIF):
    - Show the GIF preview inline so the user can quickly review the animation
    - Provide the MP4 download link: `computer://file/${OUTPUT_DIR}/video.mp4`
    - Mention the video specs (resolution, duration, fps, file size)
    - Mention the GIF is a lower-quality preview (480px wide, 15fps) — the MP4 is the full-quality deliverable
+
+4. **Proceed to Step 3.1** for cover selection (MP4 only).
+
+### Step 3.1: Cover Selection (MP4 only)
+
+After the video is rendered and the GIF preview is shown, offer cover options. **Do NOT blindly use the last frame** — it may be an empty background or fade-out.
+
+**1. Show key frames to the user.** Reuse the scene-check PNGs from Step 2.5 (in `/tmp/scene-checks/`). Show each screenshot inline with its frame number.
+
+**2. Recommend the best cover frame** — pick the frame that:
+   - Has the most visual impact (bold text, graphics, data)
+   - Best represents the video's content at a glance
+   - Has good contrast and readability as a thumbnail
+   - Is NOT an empty/faded/transitional frame
+
+**3. Ask the user:**
+> "I recommend **frame N** as the cover — it shows [brief reason].
+> The cover adds a 2-second still intro at the start and sets the video thumbnail.
+>
+> Pick a frame number, or say **no cover** to keep the video as-is."
+
+**4. Apply the user's choice:**
+- If user picks frame N:
+  ```bash
+  bash "${CLAUDE_PLUGIN_ROOT}/scripts/apply-cover.sh" \
+    /tmp/remotion-project/src/index.ts main "${OUTPUT_DIR}/video.mp4" <N>
+  ```
+  Then present the updated MP4 download link. Note: the GIF preview shows the animation content only (without the 2s cover intro).
+- If user says "no cover": done, the video stays as-is.
 
 ### Step 3b: Render LinkedIn Carousel (PDF)
 
@@ -214,8 +279,8 @@ When the user requested a **LinkedIn carousel**, follow this flow instead of Ste
 - Composition: 1200×1500 px, **1 fps**, `durationInFrames` = number of slides
 - Each frame (0, 1, 2, ...) represents one slide
 - Use `useCurrentFrame()` to switch content per slide
-- The component uses the same rules as Step 2 (inline styles, web-safe fonts, images via `<Img>` allowed)
-- See `references/templates.md` → "LinkedIn Carousel Template" for the starter pattern
+- The component uses the same rules as Step 2 (inline styles, web-safe fonts, no external assets)
+- See `references/templates/linkedin-carousel.md` for the starter pattern
 
 **Root.tsx pattern for carousel:**
 ```tsx
@@ -252,14 +317,61 @@ bash "${CLAUDE_PLUGIN_ROOT}/scripts/render-carousel.sh" \
 - Tell the user: "Upload this PDF directly to LinkedIn as a carousel post"
 - Offer to adjust content, colors, or add/remove slides
 
+### Step 3c: Render Presentation Deck (PDF)
+
+When the user requested a **presentation deck**, follow this flow instead of Step 3:
+
+**Presentation component rules:**
+- Composition: 1920×1080 px (16:9), **1 fps**, `durationInFrames` = number of slides
+- Each frame (0, 1, 2, ...) represents one slide
+- Use `useCurrentFrame()` to switch content per slide — no animations (`spring`, `interpolate` not needed)
+- Uses the Product Showcase visual design (icon badges, gradient backgrounds, title/subtitle)
+- The component uses the same rules as Step 2 (inline styles, web-safe fonts, no external assets)
+- See `references/templates/presentation-deck.md` for the starter pattern
+
+**Root.tsx pattern for presentation deck:**
+```tsx
+import { Composition } from "remotion";
+import { Video } from "./Video";
+
+export const Root: React.FC = () => {
+  return (
+    <Composition
+      id="presentation"
+      component={Video}
+      durationInFrames={5}  // = number of slides
+      fps={1}
+      width={1920}
+      height={1080}
+    />
+  );
+};
+```
+
+**Render the presentation PDF:**
+```bash
+OUTPUT_DIR=$(find /sessions -path "*/mnt/outputs" -type d 2>/dev/null | head -1)
+OUTPUT_DIR="${OUTPUT_DIR:-/tmp}"
+
+# NUM_SLIDES must match durationInFrames in Root.tsx
+bash "${CLAUDE_PLUGIN_ROOT}/scripts/render-carousel.sh" \
+  /tmp/remotion-project/src/index.ts presentation <NUM_SLIDES> "${OUTPUT_DIR}/presentation.pdf"
+```
+
+**Present to the user:**
+- Provide the PDF download link: `computer://file/${OUTPUT_DIR}/presentation.pdf`
+- Mention the number of slides and dimensions (1920×1080, 16:9 landscape)
+- Offer to adjust content, colors, or add/remove slides
+
 ### Step 4: Iteration
 
 When the user requests changes:
 
 1. **Modify the component** — Edit the specific file that needs changing
-2. **Re-render MP4** — Render the updated video
-3. **Re-generate GIF preview** — Auto-generate a new GIF so the user can review
-4. **Present both** — Show GIF preview + MP4 download link
+2. **Re-run Step 2.5** if changes affect layout, positioning, or text content. Skip for color-only or timing-only changes.
+3. **Re-render MP4** — Render the updated video
+4. **ALWAYS re-generate GIF preview** — Never skip this. Run `render-gif.sh` after every render.
+5. **Present BOTH** — Show GIF preview inline + MP4 download link. Never show only the MP4.
 
 **Common iteration patterns:**
 - "Make it faster/slower" → Adjust `durationInFrames` or interpolate ranges
@@ -290,7 +402,8 @@ When the user is satisfied:
 | Twitter/X | 1080 | 1080 | 30 | 140s | 1:1 square |
 | LinkedIn Video | 1920 | 1080 | 30 | 30s | 16:9 landscape |
 | LinkedIn Carousel | 1200 | 1500 | 1 | N slides | PDF output, 1 frame per slide |
-| Presentation | 1920 | 1080 | 30 | varies | 16:9, clean style |
+| Presentation (Video) | 1920 | 1080 | 30 | varies | 16:9, clean style |
+| Presentation (PDF) | 1920 | 1080 | 1 | N slides | PDF output, 1 frame per slide |
 
 ## Error Handling
 
@@ -313,46 +426,11 @@ When the user is satisfied:
 - **Respect the safe zone**: Keep all text and key elements within the 10% safe margin from edges
 - **Test at target resolution**: Layout should adapt — never assume 1920×1080
 
-## Image Guidelines
-
-When the user provides image URLs (product photos, logos, etc.), use Remotion's built-in `<Img>` component:
-
-```tsx
-import { Img } from "remotion";
-
-// Always use HTTPS URLs
-<Img
-  src="https://example.com/photo.jpg"
-  style={{
-    width: width * 0.5,
-    height: height * 0.4,
-    objectFit: "cover",
-    borderRadius: width * 0.01,
-  }}
-/>
-```
-
-**Rules:**
-- Import `Img` from `"remotion"` — do NOT use HTML `<img>` tags (Remotion's `<Img>` waits for the image to load before rendering the frame)
-- Only use HTTPS URLs — no HTTP, no local file paths, no `require()`
-- Always set responsive dimensions using `useVideoConfig()` — never hardcode image width/height in pixels
-- Use `objectFit: "cover"` or `"contain"` to handle varying aspect ratios
-- Recommend max source image dimension of 1920px (larger images waste memory on the 3GB VM)
-- If an image URL fails, the render will fail — always validate URLs are accessible before generating the component
-- For product showcases with many images, keep total image count reasonable (8-10 max) to avoid memory pressure
-
-**When NOT to use images:**
-- For icons, shapes, and decorative elements — use SVG/CSS instead (more reliable, no network dependency)
-- For text content — use styled `<div>` elements
-- When the user hasn't provided URLs — use code-generated placeholders
-
 ## What NOT To Do
 
-- Don't use HTML `<img>` tags — always use Remotion's `<Img>` component
-- Don't use HTTP URLs for images — HTTPS only
-- Don't use `require()` or local file paths for assets
-- Don't import external videos or fonts from URLs
+- Don't try to import external images, videos, or fonts from URLs
 - Don't create compositions longer than 60s without user confirmation
+- Don't use `require()` for assets — everything must be code-generated
 - Don't render at resolutions higher than 1920×1080 unless specifically asked
 - Don't hardcode pixel values (`fontSize: 64`, `padding: 80`) — always derive from `useVideoConfig()` dimensions
 - Don't use `spring()` without `overshootClamping: true` — elements will overshoot and escape the viewport
