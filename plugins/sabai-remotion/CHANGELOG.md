@@ -1,19 +1,64 @@
 # Changelog
 
+## [3.7.0] - 2026-03-24
+
+### Added
+- Tutorial/Walkthrough template (#8) with numbered steps, screen recording frame, highlight/focus overlays, chapter progress bar, and synced captions
+- Caption Overlay reusable pattern in remotion-patterns.md — timed caption segments with karaoke-style word highlighting, configurable fade transitions, and safe-zone positioning
+- Captions support both simple text mode and per-word timing for karaoke highlighting
+
+## [3.6.0] - 2026-03-23
+
+### Added
+- AI-powered cover selection: after rendering, Claude shows key frames and recommends the best cover
+- Step 3.1 in SKILL.md for post-render cover selection
+- `apply-cover.sh` script that prepends a 2-second cover intro and embeds the MP4 thumbnail in one step
+- `prepend-cover-frame.sh` script for rendering and prepending cover frames
+- Users pick a cover frame or choose "no cover" — simple two-option flow
+
+### Changed
+- Cover selection now happens AFTER rendering (not before), so the user sees the video first
+- `render-video.sh` is now a pure render script — no cover logic, no automatic thumbnail embedding
+- `embed-cover-art.sh` accepts optional frame number argument instead of always using last frame
+- Removed `--cover-frame` and `--cover-intro` flags from `render-video.sh` — cover is applied separately via `apply-cover.sh`
+
+## [3.5.1] - 2026-03-23
+
+### Added
+- Embed cover art (MP4 attached picture) generated from the last composition frame.
+
+## [3.5.0] - 2026-03-23
+
+### Added
+- Presentation Deck template — static Product Showcase design for PDF slide decks (1920×1080, 16:9)
+- `/video presentation [desc]` subcommand for creating presentation deck PDFs
+- Step 3c in SKILL.md for presentation deck rendering workflow
+- Auto-detect "presentation", "deck", "pitch deck" keywords to route to PDF output
+- Presentation (PDF) preset in platform presets table
+
+### Changed
+- Refactored templates into individual files (`references/templates/*.md`) for better progressive disclosure
+- Updated all template references in SKILL.md and commands to use individual files
+
+## [3.4.0] - 2026-03-23
+
+### Added
+- Visual scene validation (Step 2.5) — renders key frames as PNGs and checks for layout issues before full MP4 render
+- `render-scene-checks.sh` script for rendering specific frames as PNGs with GL fallback
+- `/video validate` subcommand for manual visual validation of the current composition
+
+### Changed
+- Video creation workflow now validates scenes before rendering MP4
+- Iteration step re-runs scene validation when layout/positioning/text changes are made
+
 ## [3.3.0] - 2026-03-23
 
 ### Added
-- External image support via Remotion's `<Img>` component with HTTPS URLs
-- Image Guidelines section in SKILL.md with usage rules and constraints
-- Product Showcase with Images template — hero, split-screen, and CTA slide layouts
-- Ken Burns (slow zoom) effect for hero image slides
-- Split-screen layout with image + text + price badge
-- Animated CTA slide with pulsing button
-
-### Changed
-- Updated component rules to allow `<Img>` imports from `"remotion"`
-- Updated carousel rules to allow images via `<Img>`
-- Replaced blanket "no external assets" prohibition with specific image guidelines
+- 3D Retro Pixel Font template — animated cursors build text from 3D pixel blocks
+- 5×7 pixel font data reference with A–Z, 0–9, space, and punctuation (. ! ? - :)
+- 6 color scheme presets: classic, retro, neon, ocean, sunset, sabai
+- Typewriter subtitle animation with blinking cursor
+- Auto-scaling block size for long text strings
 
 ## [3.2.0] - 2026-03-19
 
