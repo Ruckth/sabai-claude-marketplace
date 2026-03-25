@@ -2,15 +2,61 @@ import fs from "fs";
 import path from "path";
 import { type DocuSignAccount, clearTokenCache } from "./auth.js";
 
-// Use CLAUDE_PLUGIN_DATA for persistent storage (survives plugin updates in CoWork)
-// Fall back to local config directory for Claude Code / local dev
-const DATA_DIR = process.env.CLAUDE_PLUGIN_DATA || process.env.DOCUSIGN_DATA_DIR || "";
-const SCRIPT_DIR = typeof __dirname !== "undefined"
-  ? __dirname
-  : path.dirname(new URL(import.meta.url).pathname);
-const ACCOUNTS_DIR = DATA_DIR
-  ? path.join(DATA_DIR, "accounts")
-  : path.join(SCRIPT_DIR, "config", "accounts");
+// Resolve the writable storage directory for account profiles.
+// Priority: CLAUDE_PLUGIN_DATA > DOCUSIGN_DATA_DIR > SCRIPT_DIR/config > /tmp fallback
+function resolveAccountsDir(): string {
+  const scriptDir = typeof __dirname !== "undefined"
+    ? __dirname
+    : path.dirname(new URL(import.meta.url).pathname);
+
+  function isUnexpandedVar(value: string): boolean {
+    return value.includes("${");
+  }
+
+  function isWritableDir(dirPath: string): boolean {
+    try {
+      fs.mkdirSync(dirPath, { recursive: true });
+      fs.accessSync(dirPath, fs.constants.W_OK);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  // Candidate 1: CLAUDE_PLUGIN_DATA (CoWork persistent storage)
+  const pluginData = process.env.CLAUDE_PLUGIN_DATA;
+  if (pluginData && !isUnexpandedVar(pluginData)) {
+    const candidate = path.join(pluginData, "accounts");
+    if (isWritableDir(candidate)) return candidate;
+    console.error(`WARN: CLAUDE_PLUGIN_DATA path not writable: ${pluginData}`);
+  } else if (pluginData && isUnexpandedVar(pluginData)) {
+    console.error(`WARN: CLAUDE_PLUGIN_DATA contains unexpanded variable: ${pluginData}`);
+  }
+
+  // Candidate 2: DOCUSIGN_DATA_DIR (explicit override)
+  const docusignData = process.env.DOCUSIGN_DATA_DIR;
+  if (docusignData && !isUnexpandedVar(docusignData)) {
+    const candidate = path.join(docusignData, "accounts");
+    if (isWritableDir(candidate)) return candidate;
+    console.error(`WARN: DOCUSIGN_DATA_DIR path not writable: ${docusignData}`);
+  }
+
+  // Candidate 3: Local config directory (works for Claude Code / local dev)
+  const localCandidate = path.join(scriptDir, "config", "accounts");
+  if (isWritableDir(localCandidate)) return localCandidate;
+
+  // Candidate 4: /tmp fallback (CoWork sandbox — always writable)
+  const tmpCandidate = path.join("/tmp", "sabai-docusign-data", "accounts");
+  if (isWritableDir(tmpCandidate)) {
+    console.error(`INFO: Using /tmp fallback for account storage: ${tmpCandidate}`);
+    return tmpCandidate;
+  }
+
+  console.error("ERROR: No writable directory found for account storage");
+  return localCandidate;
+}
+
+const ACCOUNTS_DIR = resolveAccountsDir();
 
 let activeAccountName: string | null = null;
 
