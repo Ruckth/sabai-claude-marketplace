@@ -12,6 +12,5 @@ if [ -f "$SCRIPT_DIR/config/.env" ]; then
   set +a
 fi
 
-# Run the bundled MCP server (for Claude for Work zip testing)
-# For production/marketplace, change to: exec node index.js
-exec node dist/server.cjs
+# Run the MCP server
+exec node index.js
