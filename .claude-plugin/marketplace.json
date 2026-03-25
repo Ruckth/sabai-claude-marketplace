@@ -40,7 +40,7 @@
     {
       "name": "sabai-granola",
       "source": "./plugins/sabai-granola",
-      "description": "Meeting intelligence powered by Granola. Search meetings, get summaries, smart analysis by meeting type, and coaching on work patterns."
+      "description": "Meeting intelligence plugin powered by Granola. Search meetings, get summaries, smart analysis by meeting type, and holistic coaching on work patterns and communication."
     },
     {
       "name": "sabai-linear",
@@ -80,12 +80,12 @@
     {
       "name": "sabai-remotion",
       "source": "./plugins/sabai-remotion",
-      "description": "Remotion video production assistant for briefs, storyboards, composition plans, and render-ready implementation guidance."
+      "description": "Video creation assistant — generates Remotion components and renders MP4 videos with GIF previews."
     },
     {
       "name": "sabai-xero",
       "source": "./plugins/sabai-xero",
-      "description": "Xero accounting integration for invoice management, contacts, payments, and financial reports."
+      "description": "Xero accounting integration: manage invoices, contacts, payments, and generate financial reports"
     },
     {
       "name": "sabai-diagrams",
