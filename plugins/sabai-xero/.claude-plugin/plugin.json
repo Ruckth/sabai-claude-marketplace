@@ -11,7 +11,7 @@
   "mcpServers": {
     "xero": {
       "command": "node",
-      "args": ["./mcp/index.js"],
+      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/index.js"],
       "env": {
         "XERO_CLIENT_ID": "${XERO_CLIENT_ID}"
       }
