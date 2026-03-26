@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.1] - 2026-03-26
+
+### Fixed
+- Reduced startup overhead by running the precompiled server (`node dist/main.js`) instead of `tsx`
+- Removed runtime build step from `startup.sh` to prevent delayed startup failures
+- Added explicit prebuilt artifact validation for clearer install-time errors
+- Fixed dist path resolution to work in Node ESM without `tsx`-specific `import.meta.filename`
+
 ## [1.1.0] - 2026-03-24
 
 ### Added

@@ -13,7 +13,7 @@ Public marketplace for Claude plugins by [Sabai System](https://sabaisystem.com)
 | [sabai-notion](plugins/sabai-notion) | Documentation workflow with Notion integration | MCP + Skills + Commands | 1.0.0 | Active | 2026-02-16 |
 | [sabai-gmail](plugins/sabai-gmail) | Gmail assistant with embedded email editor and inbox management | MCP App + Skills + Commands | 1.3.0 | Active | 2026-02-21 |
 | [sabai-calendar](plugins/sabai-calendar) | Calendar assistant with Google Calendar integration | MCP + Skills + Commands | 1.2.0 | Active | 2026-02-21 |
-| [sabai-granola](plugins/sabai-granola) | Meeting intelligence with Granola for summaries and coaching | MCP + Commands | 1.2.0 | Active | 2026-02-17 |
+| [sabai-granola](plugins/sabai-granola) | Meeting intelligence with Granola for summaries and coaching | MCP + Commands | 1.2.1 | Active | 2026-03-26 |
 | [sabai-sabai](plugins/sabai-sabai) | Relax with chill Thai vibes when you need a break | MCP App + Command | 1.0.0 | Active | 2026-02-16 |
 | [sabai-tella](plugins/sabai-tella) | Tella video management and content planning | MCP + Commands | 1.1.0 | Active | 2026-02-16 |
 | [sabai-xero](plugins/sabai-xero) | Xero accounting: invoices, contacts, payments, reports | MCP + Skills + Commands | 1.0.0 | Active | 2026-02-20 |
@@ -22,7 +22,7 @@ Public marketplace for Claude plugins by [Sabai System](https://sabaisystem.com)
 | [sabai-slack](plugins/sabai-slack) | Full-featured Slack integration for messaging and search | MCP + Skills + Commands | 1.0.0 | Active | 2026-02-16 |
 | [sabai-recall](plugins/sabai-recall) | Meeting bot automation with Recall.ai for recording and transcription | MCP App + Commands | 1.4.0 | Active | 2026-02-16 |
 | [sabai-remotion](plugins/sabai-remotion) | Video creation, LinkedIn carousel, and presentation deck assistant with MP4, GIF, and PDF output | Skills + Commands + Scripts | 3.7.0 | Active | 2026-03-24 |
-| [sabai-diagrams](plugins/sabai-diagrams) | Mermaid diagram generator with visual renderer | MCP App + Skills + Commands | 1.1.0 | Active | 2026-03-24 |
+| [sabai-diagrams](plugins/sabai-diagrams) | Mermaid diagram generator with visual renderer | MCP App + Skills + Commands | 1.1.1 | Active | 2026-03-26 |
 | [sabai-docusign](plugins/sabai-docusign) | DocuSign e-signature assistant with multi-account support | MCP + Skills + Commands | 1.0.1 | Beta | 2026-03-25 |
 
 **Status:** Active = Stable and maintained | Beta = In development | Deprecated = No longer maintained

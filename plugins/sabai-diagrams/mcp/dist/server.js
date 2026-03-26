@@ -1,12 +1,15 @@
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
+import { fileURLToPath } from "node:url";
 import { registerAppResource, registerAppTool, RESOURCE_MIME_TYPE, } from "@modelcontextprotocol/ext-apps/server";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 // Resolve dist directory (works from both source and compiled)
-const DIST_DIR = import.meta.filename.endsWith(".ts")
-    ? path.join(import.meta.dirname, "dist")
-    : import.meta.dirname;
+const CURRENT_FILE = fileURLToPath(import.meta.url);
+const CURRENT_DIR = path.dirname(CURRENT_FILE);
+const DIST_DIR = CURRENT_FILE.endsWith(".ts")
+    ? path.join(CURRENT_DIR, "dist")
+    : CURRENT_DIR;
 // Current diagram state
 let currentDiagram = { code: "", title: "", mode: "both" };
 export function createServer() {

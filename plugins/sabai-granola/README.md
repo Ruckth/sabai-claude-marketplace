@@ -5,7 +5,7 @@
 | Field | Value |
 |-------|-------|
 | Type | MCP + Commands |
-| Version | 1.2.0 |
+| Version | 1.2.1 |
 | Status | Active |
 | Command | `/sabai-granola:search`, `/sabai-granola:summary`, `/sabai-granola:coach` |
 | Repo | `plugins/sabai-granola` |
@@ -52,6 +52,8 @@ A meeting intelligence plugin powered by Granola enabling users to search meetin
 ```bash
 claude mcp add granola --transport http https://mcp.granola.ai/mcp
 ```
+
+This plugin now uses native HTTP transport in `plugin.json` for more reliable persistence after installation.
 
 ## Authentication
 

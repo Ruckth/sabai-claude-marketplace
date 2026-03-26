@@ -5,17 +5,17 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cd "$SCRIPT_DIR"
 
-# Check if node_modules exists
+# Install runtime dependencies only if needed
 if [ ! -d "node_modules" ]; then
-  echo "Installing dependencies..." >&2
-  npm install >&2
+  echo "Installing runtime dependencies..." >&2
+  npm install --omit=dev >&2
 fi
 
-# Check if dist folder exists (built assets)
-if [ ! -d "dist" ] || [ ! -f "dist/mcp-app.html" ]; then
-  echo "Building MCP App..." >&2
-  npm run build >&2
+# Validate prebuilt artifacts (bundled with plugin)
+if [ ! -f "dist/main.js" ] || [ ! -f "dist/mcp-app.html" ]; then
+  echo "Missing prebuilt MCP artifacts in dist/. Reinstall the plugin package." >&2
+  exit 1
 fi
 
-# Run the server using tsx
-exec npx tsx main.ts
+# Run the precompiled server for fast, deterministic startup
+exec node dist/main.js

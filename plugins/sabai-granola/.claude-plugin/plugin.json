@@ -1,7 +1,7 @@
 {
   "name": "sabai-granola",
   "description": "Meeting intelligence plugin powered by Granola. Search meetings, get summaries, smart analysis by meeting type, and holistic coaching on work patterns and communication.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": {
     "name": "Sabai Team"
   },
@@ -9,8 +9,8 @@
   "commands": "./commands/",
   "mcpServers": {
     "granola": {
-      "command": "bash",
-      "args": ["${CLAUDE_PLUGIN_ROOT}/mcp/startup.sh"]
+      "type": "http",
+      "url": "https://mcp.granola.ai/mcp"
     }
   }
 }
